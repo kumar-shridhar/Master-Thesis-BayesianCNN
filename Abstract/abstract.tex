@@ -1,5 +1,14 @@
 % ************************** Thesis Abstract *****************************
 % Use `abstract' as an option in the document class to print only the titlepage and the abstract.
 \begin{abstract}
-In this thesis, Bayesian Convolutional Neural Network (BayesCNN) is proposed and is applied to many computer vision tasks like Image Classification, Image Super Resolution and Generative Adversarial Networks. BayesCNN is based on Bayes by Backprop and it is demonstrated how this novel reliable variational inference method can serve as a fundamental construct for various network architectures (AlexNet, LeNet, 3Conv3FC). The results are compared to the frequentist inference in identical architectures on multiple datasets (MNIST, CIFAR-10, CIFAR-100, STL-10, BSD300) and a comparison between the results is drawn.
+In traditional neural network, the main goal is to find an optimal point estimate for the weights. 
+Generally the network using point estimates as weights perform well with large datasets, but they fail to express uncertainity in regions with little or no data, leading to overconfident decisions.
+
+In this thesis, Bayesian Convolutional Neural Network (BayesCNN) is proposed that introduces probability distribution over the weights. 
+
+BayesCNN is based on Bayes by Backprop which derives a variational approximation to the true posterior. 
+Our proposed method not only achieves performances equivalent to frequentist inference in identical architectures, but also incorporate a measurement for uncertainties and  regularisation. Furthermore, the approach eliminates the use of dropout in the model. 
+
+The concept is applied to many computer vision tasks like Image Classification, Image Super Resolution and Generative Adversarial Networks.
+
 \end{abstract}
