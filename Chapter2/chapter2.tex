@@ -12,11 +12,60 @@
     \graphicspath{{Chapter2/Figs/Vector/}{Chapter2/Figs/}}
 \fi
 
-
+\section{Overview}
 \section{Bayesian Inference}
+\section{Variational Inference}
+
+Performing Bayesian inference on a neural network requires the posterior distribution of the network weights given the data. If the weights have a prior probability P (w\textbar{}α) that depends on some parameters α, the posterior can be written Pr(w\textbar{}D, α). Unfortunately, for most neural networks Pr(w\textbar{}D, α) cannot be calculated analytically, or even efficiently sampled from. Variational inference addresses this problem by approximating Pr(w\textbar{}D, α) with a more tractable distribution Q (w\textbar{}β). The approximation is fitted by minimising the variational free energy F with respect to the parameters
+β, where\\ 
+F = − ln  Pr(D\textbar{}w)P (w\textbar{}α) Q (w\textbar{}β) 
+w∼Q(β)\\
+and for some function g of a random variable x with distribution p(x),
+hgix∼p denotes the expectation\\
+of g over p. A fully Bayesian approach would infer the prior parameters
+α from a hyperprior; however in this paper they are found by simply
+minimising F with respect to α as well as β.
+
 \subsection{Monte  Carlo  variational  inference}
 \subsection{Local  reparametrisation  trick}
+
+We utilise the local reparameterization trick \cite{kingma2015variational} and apply it to \acp{cnn}. Following \cite{kingma2015variational,neklyudov2018variance}, we do not sample the weights $w$, but we sample instead layer activations $b$ due to its consequent computational acceleration. The variational posterior probability distribution $q_{\theta}(w_{ijhw}|\mathcal{D})=\mathcal{N}(\mu_{ijhw},\alpha_{ijhw}\mu^2_{ijhw})$ (where $i$ and $j$ are the input, respectively output layers, $h$ and $w$ the height, respectively width of any given filter) allows to implement the local reparamerization trick in convolutional layers. This results in the subsequent equation for convolutional layer activations $b$:
+\begin{equation}
+    b_j=A_i\ast \mu_i+\epsilon_j\odot \sqrt{A^2_i\ast (\alpha_i\odot \mu^2_i)}
+\end{equation}
+where $\epsilon_j \sim \mathcal{N}(0,1)$, $A_i$ is the receptive field, $\ast$ signalises the convolutional operation, and $\odot$ the component-wise multiplication.
+
 \section{Bayes by Backprop}
+\textit{Bayes by Backprop} \cite{graves2011practical, blundell2015weight} is a variational inference method to learn the posterior distribution on the weights $w \sim q_{\theta}(w|\mathcal{D})$ of a neural network from which weights $w$ can be sampled in backpropagation. 
+It regularises the weights by minimising a compression cost, known as the variational free energy or the expected lower bound on the marginal likelihood.
+
+Since the true posterior is typically intractable, an approximate distribution $q_{\theta}(w|\mathcal{D})$ is defined that is aimed to be as similar as possible to the true posterior $p(w|\mathcal{D})$, measured by the Kullback-Leibler (KL) divergence \cite{kullback1951information}. Hence, we define the optimal parameters $\theta^{opt}$ as
+\begin{equation}
+    \begin{aligned} \label{KL}
+        \theta^{opt}&=\underset{\theta}{\text{arg min}}\ \text{KL} \ [q_{\theta}(w|\mathcal{D})\|p(w|\mathcal{D})] \\
+        &=\underset{\theta}{\text{arg min}}\ \text{KL} \ [q_{\theta}(w|\mathcal{D})\|p(w)] \\ & -\mathbb{E}_{q(w|\theta)}[\log p(\mathcal{D}|w)]+\log p(\mathcal{D})
+    \end{aligned}
+\end{equation}
+
+where
+\begin{equation}
+    \text{KL} \ [q_{\theta}(w|\mathcal{D})\|p(w)]= \int q_{\theta}(w|\mathcal{D})\log\frac{q_{\theta}(w|\mathcal{D})}{p(w)}dw .
+\end{equation}
+This derivation forms an optimisation problem with a resulting cost function widely known as \textit{variational free energy} \cite{neal1998view,yedidia2005constructing,friston2007variational} which is built upon two terms: the former, $\text{KL} \ [q_{\theta}(w|\mathcal{D})\|p(w)]$, is dependent on the definition of the prior $p(w)$, thus called complexity cost, whereas the latter, $\mathbb{E}_{q(w|\theta)}[\log p(\mathcal{D}|w)]$, is dependent on the data $p(\mathcal{D}|w)$, thus called likelihood cost. 
+The term $\log p(\mathcal{D})$ can be omitted in the optimisation because it is constant.
+\newline Since the KL-divergence is also intractable to compute exactly, we follow a stochastic variational method \cite{graves2011practical,blundell2015weight}.
+We sample the weights $w$ from the variational distribution $q_{\theta}(w|\mathcal{D})$ since it is much more probable to draw samples which are appropriate for numerical methods from the variational posterior $q_{\theta}(w|\mathcal{D})$ than from the true posterior $p(w|\mathcal{D})$. Consequently, we arrive at the tractable cost function \eqref{cost} which is aimed to be optimized, i.e. minimised w.r.t. $\theta$, during training:
+\begin{equation} \label{cost}
+    \mathcal{F}(\mathcal{D}, \theta)\approx \sum_{i=1}^n \log q_{\theta}(w^{(i)}|\mathcal{D})-\log p(w^{(i)})-\log p(\mathcal{D}|w^{(i)})
+\end{equation}
+%
+where $n$ is the number of draws.
+\newline We sample $w^{(i)}$ from $q_{\theta}(w|\mathcal{D})$. The uncertainty afforded by \textit{Bayes by Backprop} trained neural networks has been used successfully for training feedforward neural networks in both supervised and reinforcement learning environments \cite{blundell2015weight,lipton2016efficient,houthooft2016curiosity}, for training recurrent neural networks \cite{fortunato2017bayesian}, but has not been applied to convolutional neural networks to-date.
+
+\section{Related Work}
+Applying Bayesian methods to neural networks has been studied in the past with various approximation methods for the intractable true posterior probability distribution $p(w|\mathcal{D})$. Buntine and Weigend \cite{buntine1991bayesian} started to propose various \textit{maximum-a-posteriori} (MAP) schemes for neural networks. They were also the first who suggested second order derivatives in the prior probability distribution $p(w)$ to encourage smoothness of the resulting approximate posterior probability distribution. In subsequent work by Hinton and Van Camp \cite{hinton1993keeping}, the first variational methods were proposed which naturally served as a regularizer in neural networks. Hochreiter and Schmidhuber \cite{hochreiter1995simplifying} suggest taking an information theory perspective into account and utilising a minimum description length (MDL) loss. This penalises non-robust weights by means of an approximate penalty based upon perturbations of the weights on the outputs. Denker and LeCun \cite{denker1991transforming}, and MacKay \cite{mackay1995probable} investigated the posterior probability distributions of neural networks by using Laplace approximations. As a response to the limitations of Laplace approximations, Neal \cite{neal2012bayesian} investigated the use of hybrid Monte Carlo for training neural networks, although it has so far been difficult to apply these to the large sizes of neural networks built in modern applications. More recently, Graves \cite{graves2011practical} derived a variational inference scheme for neural networks and Blundell et al. \cite{blundell2015weight} extended this with an update for the variance that is unbiased and simpler to compute. Graves \cite{graves2016stochastic} derives a similar algorithm in the case of a mixture posterior probability distribution. 
+\newline Several authors have claimed that Dropout \cite{srivastava2014dropout} and Gaussian Dropout \cite{wang2013fast} can be viewed as approximate variational inference schemes \cite{gal2015bayesian, kingma2015variational}. We compare our results to Gal's \& Ghahramani's \cite{gal2015bayesian} and discuss the methodological differences in detail.
+
 \section{Bayesian Convolutional Neural Network (BayesCNN)}
 
 % Uncomment this line, when you have siunitx package loaded.

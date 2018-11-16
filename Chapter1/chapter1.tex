@@ -13,6 +13,146 @@
 
 
 %********************************** %First Section  **************************************
+
+\section{The Problem!}
+
+Artificial Neural Networks are connectionist systems that learn to perform tasks by learning on examples without having a prior knowledge about the tasks. 
+They easily scale to millions of data points and yet remain tractable to optimize with stochastic gradient descent.
+
+Convolutional Neural Networks (CNNs), have already surpassed human accuracy in the realm of image classification (e.g. \cite{he2016deep,simonyan2014very,krizhevsky2012imagenet}). Due to the capacity of CNNs to fit on a wide diversity of non-linear data points, they require large amount of training data. This often makes CNNs and Neural Networks in general, prone to overfitting on small datasets. The model tends to fit well to the training data, but are not predictive for new data. This often makes the Neural Networks incapable of correctly assessing the uncertainty in the training data and hence leads to overly confident decisions about the correct class, prediction or action.
+
+Various regularization techniques for controlling overfitting are used in practice; a currently popular and empirically effective technique being \emph{dropout}~\cite{hinton2012improving}. However, from a probability theory perspective, it is unjustifiable to use single point-estimates as weights to base any classification on. 
+
+We will address both of these concerns by using Bayesian learning to add a measure for uncertainty and regularization in their predictions. 
+
+\section{How to deal with the problem}
+
+
+\newline In this work, we apply Bayesian methods to \acp{cnn} in order to add a measure for uncertainty and regularization in their predictions, respectively their training. This approach allows the network to express uncertainty via its parameters in form of probability distributions (see Figure \ref{fig:filter_scalar}). At the same time, by using a prior probability distribution to integrate out the parameters, we compute the average across many models during training, which gives a regularization effect to the network, thus preventing overfitting.
+\newline We build our Bayesian \ac{cnn} upon \textit{Bayes by Backprop} \cite{graves2011practical,blundell2015weight}, and approximate the intractable true posterior probability distributions $p(w|\mathcal{D})$ with variational probability distributions $q_{\theta}(w|\mathcal{D})$, which comprise the properties of Gaussian distributions $\mu \in \mathbb{R}^d$ and $\sigma \in \mathbb{R}^d$, denoted $\mathcal{N}(\theta|\mu, \sigma^2)$, where $d$ is the total number of parameters defining a probability distribution.. The shape of these Gaussian variational posterior probability distributions, determined by their variance $\sigma^2$, expresses an uncertainty estimation of every model parameter. The main contributions of our work are as follows: 
+\begin{enumerate}
+    \item We present how \textit{Bayes by Backprop} can be efficiently applied to \acp{cnn}. We therefore introduce the idea of applying two convolutional operations, one for the mean and one for the variance.
+    \item We empirically show that our proposed generic and reliable variational inference method for Bayesian \acp{cnn} can be applied to various \ac{cnn} architectures without any limitations on their performances. 
+    \item We examine how to estimate the aleatoric and epistemic uncertainties and add regularization in \acp{cnn} by means of applying Bayesian methods to their training. We compare the performances of these Bayesian \acp{cnn} to \acp{cnn} which use single point-estimates as weights, i.e. which are trained by frequentist inference.
+\end{enumerate} 
+This work builds on the foundations laid out by Blundell et al. \cite{blundell2015weight}, who introduced \textit{Bayes by Backprop} for feedforward neural networks. Together with the extension to recurrent neural networks, introduced by Fortunato et al. \cite{fortunato2017bayesian}, \textit{Bayes by Backprop} is now applicable on the three most frequently used types of neural networks, i.e., feedforward, recurrent, and convolutional neural networks.
+
+ In contrast Bayesian neural networks (NNs) are robust to over-fitting, offer uncertainty estimates, and can easily learn from small datasets. First developed in the '90s and studied extensively since then \citep{mackay1992practical, neal1995bayesian}, Bayesian NNs offer a probabilistic interpretation of deep learning models by inferring distributions over the models' weights. 
+However, modelling a distribution over the kernels (also known as filters) of a CNN has never been attempted successfully before, perhaps because of the vast number of parameters and extremely large models commonly used in practical applications. 
+
+Even with a small number of parameters, inferring model posterior in a Bayesian NN is a difficult task. Approximations to the model posterior are often used instead, with variational inference being a popular approach. In this approach one would model the posterior using a simple \textit{variational} distribution such as a Gaussian, and try to fit the distribution's parameters to be as close as possible to the true posterior. This is done by minimising the Kullback-Leibler divergence from the true posterior. Many have followed this approach in the past for standard NN models \citep{hinton1993keeping,barber1998ensemble,graves2011practical,blundell2015weight}.
+But the variational approach used to approximate the posterior in Bayesian NNs can be fairly computationally expensive -- the use of Gaussian approximating distributions increases the number of model parameters considerably, without increasing model capacity by much. \citet{blundell2015weight} for example use Gaussian distributions for Bayesian NN posterior approximation and have doubled the number of model parameters, yet report the same predictive performance as traditional approaches using dropout. This makes the approach unsuitable for use with CNNs as the increase in the number of parameters is too costly.
+Instead, here we use \textit{Bernoulli approximating variational distributions}.
+The use of Bernoulli variables requires no additional parameters for the approximate posteriors, and allows us to obtain a computationally efficient Bayesian CNN implementation. 
+
+Perhaps surprisingly, we can implement our model using existing tools in the field.
+\citet{Gal2015Dropout} have recently shown that dropout in NNs can be interpreted as an approximation to a well known Bayesian model -- the Gaussian process (GP). 
+What was not shown, however, is how this relates to Bayesian NNs or to CNNs, and was left for future research \citep[][appendix section 4.2]{Gal2015Dropout}. 
+Extending on the work, we show here that dropout networks' training can be cast as approximate Bernoulli variational inference in Bayesian NNs. 
+This allows us to use operations such as convolution and pooling in probabilistic models in a principled way. 
+The implementation of our Bayesian neural network is thus reduced to performing dropout after every convolution layer at training. This, in effect, approximately integrates over the kernels. %We overcome difficulties with dropout at test time by 
+At test time we evaluate the model output by approximating the predictive posterior -- we average stochastic forward passes through the model -- referred to as Monte Carlo (MC) dropout. 
+
+Our model is implemented by performing dropout after convolution layers. In existing literature, however, dropout is often \textit{not used} after convolution layers. This is because test error suffers, which renders small dataset modelling a difficult task. 
+This highlights a \textit{negative result} in the field: the dropout approximation fails with convolutions. %together with a .
+Our mathematically grounded solution alleviates this problem by interleaving Bayesian techniques into deep learning. 
+
+%The contributions of this work are numerous. First, we show that dropout in NNs is equivalent to approximate variational inference in Bayesian NNs, extending on the work of \citep{Gal2015Dropout}. Second, f 
+Following our theoretical insights we propose new practical dropout CNN architectures, mathematically identical to Bayesian CNNs. These models obtain better test accuracy compared to existing approaches in the field with no additional computational cost during training. %Third, w
+We show that the proposed model reduces over-fitting on small datasets compared to standard techniques. Furthermore, we demonstrate improved results with MC dropout on existing CNN models in the literature. %This is in contrast to the way dropout is currently used in the literature. 
+%This is an example where the standard dropout approximation fails. 
+We give empirical results assessing the number of MC samples required to improve model performance, and finish with state-of-the-art results on the CIFAR-10 dataset following our insights. 
+The main contributions of the paper are thus: 
+\begin{enumerate}
+\item
+Showing that the dropout approximation fails in some network architectures. This extends on the results given in \citep{srivastava2014dropout}. 
+This is why dropout is not used with convolutions in practice, and as a result CNNs overfit quickly on small data.
+\item
+Casting dropout as variational inference in Bayesian neural networks, %(extending on previous work with Gaussian processes), 
+\item
+This Bayesian interpretation of dropout allows us to propose the use of MC dropout for convolutions (fixing the problem with a mathematically grounded approach, rather than through trial and error), 
+\item
+Comparing the resulting techniques empirically.
+\end{enumerate}
+
+
+ In \cite{wang2013fast} it was shown that regular (binary) dropout has a Gaussian approximation called \emph{Gaussian dropout} with virtually identical regularization performance but much faster convergence. In section 5 of \cite{wang2013fast} it is shown that Gaussian dropout optimizes a lower bound on the marginal likelihood of the data. In this paper we show that a relationship between dropout and Bayesian inference can be extended and exploited to greatly improve the efficiency of variational Bayesian inference on the model parameters. This work has a direct interpretation as a generalization of Gaussian dropout, with the same fast convergence but now with the freedom to specify more flexibly parameterized posterior distributions.
+
+Bayesian posterior inference over the neural network parameters is a theoretically attractive method for controlling overfitting; exact inference is computationally intractable, but efficient approximate schemes can be designed. Markov Chain Monte Carlo (MCMC) is a class of approximate inference methods with asymptotic guarantees, pioneered by~\cite{neal1995bayesian} for the application of regularizing neural networks. Later useful refinements include ~\cite{welling2011bayesian} and \cite{ahn2012bayesian}.
+
+An alternative to MCMC is variational inference~\cite{hinton1993keeping} or the equivalent \emph{minimum description length} (MDL) framework. Modern variants of stochastic variational inference have been applied to neural networks with some succes~\cite{graves2011practical}, but have been limited by high variance in the gradients. Despite their theoretical attractiveness, Bayesian methods for inferring a posterior distribution over neural network weights have not yet been shown to outperform simpler methods such as dropout. Even a new crop of efficient variational inference algorithms based on stochastic gradients with minibatches of data~\cite{salimans2013fixedform,kingma2013auto,rezende2014stochastic} have not yet been shown to significantly improve upon simpler dropout-based regularization.
+
+In section~\ref{sec:variational_dropout} we explore an as yet unexploited trick for improving the efficiency of stochastic gradient-based variational inference with minibatches of data, by translating uncertainty about global parameters into local noise that is independent across datapoints in the minibatch. The resulting method has an optimization speed on the same level as fast dropout~\cite{wang2013fast}, and indeed has the original Gaussian dropout method as a special case. An advantage of our method is that it allows for full Bayesian analysis of the model, and that it's significantly more flexible than standard dropout. The approach presented here is closely related to several popular methods in the literature that regularize by adding random noise; these relationships are discussed in section~\ref{sec:relatedwork}.
+
+
+
+We call our algorithm \emph{Bayes by Backprop}.
+We suggest at least three motivations for introducing uncertainty on
+the weights: 1) regularisation via a compression cost on the weights, 2) richer
+representations and predictions from cheap model averaging, and 3) exploration
+in simple reinforcement learning problems such as contextual bandits. 
+
+Various regularisation schemes have been developed to prevent overfitting in neural networks
+such as early stopping, weight decay, and dropout \citep{hinton_dropout_2012}.
+In this work, we introduce an efficient, principled algorithm for regularisation built upon Bayesian inference on
+the weights of the network \citep{mackay_practical_1992,buntine_bayesian_1991,mackay_probable_1995}.
+This leads to a simple approximate learning
+algorithm similar to backpropagation \citep{lecun_procedure_1985,
+rumelhart1988learning}.
+We shall demonstrate how this uncertainty can improve predictive
+performance in regression problems by expressing uncertainty in regions with little or no data,
+how this uncertainty can lead to more systematic exploration
+than $\epsilon$-greedy in contextual bandit tasks.
+
+All weights in our neural networks are represented by probability distributions
+over possible values, rather than having a single fixed value as is the norm (see Figure~\ref{fig:schema}).
+Learnt representations and computations must therefore be robust under
+perturbation of the weights, but the amount of perturbation each weight exhibits is
+also learnt in a way that coherently explains variability in the training data.
+Thus instead of training a single network, the proposed method trains an ensemble of networks,
+where each network has its weights drawn from a shared, learnt probability distribution.
+Unlike other ensemble methods, our method typically only doubles the number of parameters
+yet trains an infinite ensemble using unbiased Monte Carlo estimates of
+the gradients.
+
+In general, exact Bayesian inference on the weights of a neural network is intractable as
+the number of parameters is very large and the functional form of a neural network does not lend itself
+to exact integration.
+Instead we take a variational approximation to exact Bayesian updates.
+We build upon the work of \citet{graves_practical_2011}, who in turn built upon the work of \citet{hinton_keeping_1993}.
+In contrast to this previous work, we show how the gradients of
+\citet{graves_practical_2011} can be made unbiased and further how this method
+can be used with non-Gaussian priors.
+Consequently, Bayes by Backprop attains performance comparable to that of dropout \citep{hinton_dropout_2012}.
+Our method is related to recent methods in deep, generative modelling
+\citep{kingma_autoencoding_2014, rezende_stochastic_2014, gregor_deep_2014},
+where variational inference has been applied to stochastic hidden units of an autoencoder.
+Whilst the number of stochastic hidden units might be in the order of
+thousands, the number of weights in a neural network is easily two orders of
+magnitude larger, making the optimisation problem much larger scale.
+Uncertainty in the hidden units allows the expression of uncertainty about a particular observation,
+uncertainty in the weights is complementary in that it captures uncertainty
+about which neural network is appropriate, leading to regularisation of the
+weights and model averaging.
+
+This uncertainty can be used to drive exploration in contextual bandit problems
+using Thompson sampling \citep{thompson_likelihood_1933, chapelle_empirical_2011, agrawal_analysis_2012, may_optimistic_2012}.
+Weights with greater uncertainty introduce more variability into the decisions made by the network,
+leading naturally to exploration.
+As more data are observed, the uncertainty can decrease, allowing the decisions made by the network
+to become more deterministic as the environment is better understood.
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[height=.15\textheight]{fig/Weights.pdf}
+\includegraphics[height=.15\textheight]{fig/Distro.pdf}
+\label{fig:schema}
+\caption{Left: each weight has a fixed value, as provided by classical backpropagation. Right: each weight is assigned a distribution, as provided by Bayes by Backprop.}
+\end{center}
+\end{figure}
+
+
+
 \section{Probabilistic Machine Learning} %Section - 1.1 
 
 Lorem Ipsum is simply dummy text of the printing and typesetting industry (see 

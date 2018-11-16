@@ -3,13 +3,16 @@
 \begin{abstract}
 Artificial Neural Networks are connectionist systems that learn to perform tasks by learning on examples without having a prior knowledge about the tasks. This is done by finding an optimal point estimate for the weights in every node.
 Generally, the network using point estimates as weights perform well with large datasets, but they fail to express uncertainty in regions with little or no data, leading to overconfident decisions.
+\newline
 
-In this thesis, Bayesian Convolutional Neural Network (BayesCNN) is proposed that introduces probability distribution over the weights. 
+In this thesis, Bayesian Convolutional Neural Network (BayesCNN) using Variational Inference is proposed, that introduces probability distribution over the weights. Furthemore, the proposed BayesCNN architecture is applied to tasks like Image Classification, Image Super-Resolution and Generative Adversarial Networks.
 
 BayesCNN is based on Bayes by Backprop which derives a variational approximation to the true posterior. 
 Our proposed method not only achieves performances equivalent to frequentist inference in identical architectures but also incorporate a measurement for uncertainties and regularisation. Furthermore, the approach eliminates the use of dropout in the model.
+\newline
 
-In the first part of the thesis, the Bayesian Neural Network is explained and applied to Image Classification task. The results are compared to point-estimates based architectures on MNIST, CIFAR-10, CIFAR-100 and STL-10 datasets.
+
+In the first part of the thesis, the Bayesian Neural Network is explained and it is applied to an Image Classification task. The results are compared to point-estimates based architectures on MNIST, CIFAR-10, CIFAR-100 and STL-10 datasets.
 
 In the second part of the thesis, the concept is further applied to other computer vision tasks namely, Image Super-Resolution and Generative Adversarial Networks. The concept of BayesCNN is tested and compared against other concepts in a similar domain.  
 
