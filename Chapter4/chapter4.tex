@@ -4,7 +4,7 @@
 %****************************** Second Chapter *********************************
 %*******************************************************************************
 
-\chapter{Applications}
+\chapter{Concept}
 
 \ifpdf
     \graphicspath{{Chapter2/Figs/Raster/}{Chapter2/Figs/PDF/}{Chapter2/Figs/}}
@@ -12,107 +12,70 @@
     \graphicspath{{Chapter2/Figs/Vector/}{Chapter2/Figs/}}
 \fi
 
+\section{Bayesian convolutional neural networks with variational inference}
+In this section, we explain our algorithm of building a \ac{cnn} with probability distributions over its weights in each filter, as seen in Figure \ref{fig:filter_scalar}, and apply variational inference, i.e. \textit{Bayes by Backprop}, to compute the intractable true posterior probability distribution, as described in the previous section. Notably, a fully Bayesian perspective on a \ac{cnn} is for most \ac{cnn} architectures not accomplished by merely placing probability distributions over weights in convolutional layers; it also requires probability distributions over weights in fully-connected layers (see Figure \ref{fig:CNNwithdist_grey}). 
+%
+\begin{figure}[H] 
+\centering
+\begin{minipage}{.4\textwidth}
+\centering
+\includegraphics[width=\linewidth]{Chapter4/Figs/filter_scalars.png}
+\end{minipage}
+%
+\begin{minipage}{.4\textwidth}
+\centering
+\includegraphics[width=\linewidth]{Chapter4/Figs/CNNwithdist.png}
+\end{minipage}
+\caption{Input image with exemplary pixel values, filters, and corresponding output with point-estimates (top) and probability distributions (bottom) over weights.}
+\label{fig:filter_scalar}
+\end{figure} 
+%
+\begin{figure}[b!] 
+\begin{center}
+\includegraphics[width=\linewidth]{Chapter4/Figs/CNNwithdist_grey.png}}
+\caption{Fully Bayesian perspective of an exemplary \ac{cnn}. Weights in filters of convolutional layers, and weights in fully-connected layers have the form of a probability distribution.}
+\label{fig:CNNwithdist_grey}
+\end{center}
+\end{figure} 
+%
+\subsection{Local reparameterization trick for convolutional layers}
+We utilise the local reparameterization trick \cite{kingma2015variational} and apply it to \acp{cnn}. Following \cite{kingma2015variational,neklyudov2018variance}, we do not sample the weights $w$, but we sample instead layer activations $b$ due to its consequent computational acceleration. The variational posterior probability distribution $q_{\theta}(w_{ijhw}|\mathcal{D})=\mathcal{N}(\mu_{ijhw},\alpha_{ijhw}\mu^2_{ijhw})$ (where $i$ and $j$ are the input, respectively output layers, $h$ and $w$ the height, respectively width of any given filter) allows to implement the local reparamerization trick in convolutional layers. This results in the subsequent equation for convolutional layer activations $b$:
+\begin{equation}
+    b_j=A_i\ast \mu_i+\epsilon_j\odot \sqrt{A^2_i\ast (\alpha_i\odot \mu^2_i)}
+\end{equation}
+where $\epsilon_j \sim \mathcal{N}(0,1)$, $A_i$ is the receptive field, $\ast$ signalises the convolutional operation, and $\odot$ the component-wise multiplication.
 
-\section{BayesCNN for Image Classification}
-And now I begin my third chapter here \dots
-
-And now to cite some more people~\citet{Rea85,Ancey1996}
-
-\section{BayesCNN for Image Super Resolution}
-
-\section{BayesCNN for Generative Adversarial Networks}
-
-% Uncomment this line, when you have siunitx package loaded.
-%The SI Units for dynamic viscosity is \si{\newton\second\per\metre\squared}.
-I'm going to randomly include a picture Figure~\ref{fig:minion}.
-
-
-If you have trouble viewing this document contact Krishna at: \href{mailto:kks32@cam.ac.uk}{kks32@cam.ac.uk} or raise an issue at \url{https://github.com/kks32/phd-thesis-template/}
-
-
-\begin{figure}[htbp!] 
-\centering    
-\includegraphics[width=1.0\textwidth]{minion}
-\caption[Minion]{This is just a long figure caption for the minion in Despicable Me from Pixar}
-\label{fig:minion}
-\end{figure}
-
-
-\section*{Enumeration}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae laoreet lectus. Donec lacus quam, malesuada ut erat vel, consectetur eleifend tellus. Aliquam non feugiat lacus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque a dolor sit amet dui malesuada malesuada id ac metus. Phasellus posuere egestas mauris, sed porta arcu vulputate ut. Donec arcu erat, ultrices et nisl ut, ultricies facilisis urna. Quisque iaculis, lorem non maximus pretium, dui eros auctor quam, sed sodales libero felis vel orci. Aliquam neque nunc, elementum id accumsan eu, varius eu enim. Aliquam blandit ante et ligula tempor pharetra. Donec molestie porttitor commodo. Integer rutrum turpis ac erat tristique cursus. Sed venenatis urna vel tempus venenatis. Nam eu rhoncus eros, et condimentum elit. Quisque risus turpis, aliquam eget euismod id, gravida in odio. Nunc elementum nibh risus, ut faucibus mauris molestie eu.
- Vivamus quis nunc nec nisl vulputate fringilla. Duis tempus libero ac justo laoreet tincidunt. Fusce sagittis gravida magna, pharetra venenatis mauris semper at. Nullam eleifend felis a elementum sagittis. In vel turpis eu metus euismod tempus eget sit amet tortor. Donec eu rhoncus libero, quis iaculis lectus. Aliquam erat volutpat. Proin id ullamcorper tortor. Fusce vestibulum a enim non volutpat. Nam ut interdum nulla. Proin lacinia felis malesuada arcu aliquet fringilla. Aliquam condimentum, tellus eget maximus porttitor, quam sem luctus massa, eu fermentum arcu diam ac massa. Praesent ut quam id leo molestie rhoncus. Praesent nec odio eget turpis bibendum eleifend non sit amet mi. Curabitur placerat finibus velit, eu ultricies risus imperdiet ut. Suspendisse lorem orci, luctus porta eros a, commodo maximus nisi.
-
-Nunc et dolor diam. Phasellus eu justo vitae diam vehicula tristique. Vestibulum vulputate cursus turpis nec commodo. Etiam elementum sit amet erat et pellentesque. In eu augue sed tortor mollis tincidunt. Mauris eros dui, sagittis vestibulum vestibulum vitae, molestie a velit. Donec non felis ut velit aliquam convallis sit amet sit amet velit. Aliquam vulputate, elit in lacinia lacinia, odio lacus consectetur quam, sit amet facilisis mi justo id magna. Curabitur aliquet pulvinar eros. Cras metus enim, tristique ut magna a, interdum egestas nibh. Aenean lorem odio, varius a sollicitudin non, cursus a odio. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; 
-\begin{enumerate}
-\item The first topic is dull
-\item The second topic is duller
-\begin{enumerate}
-\item The first subtopic is silly
-\item The second subtopic is stupid
-\end{enumerate}
-\item The third topic is the dullest
-\end{enumerate}
-Morbi bibendum est aliquam, hendrerit dolor ac, pretium sem. Nunc molestie, dui in euismod finibus, nunc enim viverra enim, eu mattis mi metus id libero. Cras sed accumsan justo, ut volutpat ipsum. Nam faucibus auctor molestie. Morbi sit amet eros a justo pretium aliquet. Maecenas tempor risus sit amet tincidunt tincidunt. Curabitur dapibus gravida gravida. Vivamus porta ullamcorper nisi eu molestie. Ut pretium nisl eu facilisis tempor. Nulla rutrum tincidunt justo, id placerat lacus laoreet et. Sed cursus lobortis vehicula. Donec sed tortor et est cursus pellentesque sit amet sed velit. Proin efficitur posuere felis, porta auctor nunc. Etiam non porta risus. Pellentesque lacinia eros at ante iaculis, sed aliquet ipsum volutpat. Suspendisse potenti.
-
-Ut ultrices lectus sed sagittis varius. Nulla facilisi. Nullam tortor sem, placerat nec condimentum eu, tristique eget ex. Nullam pretium tellus ut nibh accumsan elementum. Aliquam posuere gravida tellus, id imperdiet nulla rutrum imperdiet. Nulla pretium ullamcorper quam, non iaculis orci consectetur eget. Curabitur non laoreet nisl. Maecenas lacinia, lorem vel tincidunt cursus, odio lorem aliquet est, gravida auctor arcu urna id enim. Morbi accumsan bibendum ipsum, ut maximus dui placerat vitae. Nullam pretium ac tortor nec venenatis. Nunc non aliquet neque. 
-
-\section*{Itemize}
-\begin{itemize}
-\item The first topic is dull
-\item The second topic is duller
-\begin{itemize}
-\item The first subtopic is silly
-\item The second subtopic is stupid
-\end{itemize}
-\item The third topic is the dullest
-\end{itemize}
-
-\section*{Description}
-\begin{description}
-\item[The first topic] is dull
-\item[The second topic] is duller
-\begin{description}
-\item[The first subtopic] is silly
-\item[The second subtopic] is stupid
-\end{description}
-\item[The third topic] is the dullest
-\end{description}
-
-
-\clearpage
-
-\tochide\section{Hidden section}
-\textbf{Lorem ipsum dolor sit amet}, \textit{consectetur adipiscing elit}. In magna nisi, aliquam id blandit id, congue ac est. Fusce porta consequat leo. Proin feugiat at felis vel consectetur. Ut tempus ipsum sit amet congue posuere. Nulla varius rutrum quam. Donec sed purus luctus, faucibus velit id, ultrices sapien. Cras diam purus, tincidunt eget tristique ut, egestas quis nulla. Curabitur vel iaculis lectus. Nunc nulla urna, ultrices et eleifend in, accumsan ut erat. In ut ante leo. Aenean a lacinia nisl, sit amet ullamcorper dolor. Maecenas blandit, tortor ut scelerisque congue, velit diam volutpat metus, sed vestibulum eros justo ut nulla. Etiam nec ipsum non enim luctus porta in in massa. Cras arcu urna, malesuada ut tellus ut, pellentesque mollis risus.Morbi vel tortor imperdiet arcu auctor mattis sit amet eu nisi. Nulla gravida urna vel nisl egestas varius. Aliquam posuere ante quis malesuada dignissim. Mauris ultrices tristique eros, a dignissim nisl iaculis nec. Praesent dapibus tincidunt mauris nec tempor. Curabitur et consequat nisi. Quisque viverra egestas risus, ut sodales enim blandit at. Mauris quis odio nulla. Cras euismod turpis magna, in facilisis diam congue non. Mauris faucibus nisl a orci dictum, et tempus mi cursus.
-
-Etiam elementum tristique lacus, sit amet eleifend nibh eleifend sed \footnote{My footnote goes blah blah blah! \dots}. Maecenas dapibu augue ut urna malesuada, non tempor nibh mollis. Donec sed sem sollicitudin, convallis velit aliquam, tincidunt diam. In eu venenatis lorem. Aliquam non augue porttitor tellus faucibus porta et nec ante. Proin sodales, libero vitae commodo sodales, dolor nisi cursus magna, non tincidunt ipsum nibh eget purus. Nam rutrum tincidunt arcu, tincidunt vulputate mi sagittis id. Proin et nisi nec orci tincidunt auctor et porta elit. Praesent eu dolor ac magna cursus euismod. Integer non dictum nunc.
-
-
-\begin{landscape}
-
-\section*{Subplots}
-I can cite Wall-E (see Fig.~\ref{fig:WallE}) and Minions in despicable me (Fig.~\ref{fig:Minnion}) or I can cite the whole figure as Fig.~\ref{fig:animations}
-
-
-\begin{figure}
-  \centering
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{TomandJerry}
-    \caption{Tom and Jerry}
-    \label{fig:TomJerry}   
-  \end{subfigure}             
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{WallE}
-    \caption{Wall-E}
-    \label{fig:WallE}
-  \end{subfigure}             
-  \begin{subfigure}[b]{0.3\textwidth}
-    \includegraphics[width=\textwidth]{minion}
-    \caption{Minions}
-    \label{fig:Minnion}
-  \end{subfigure}
-  \caption{Best Animations}
-  \label{fig:animations}
-\end{figure}
-
-
-\end{landscape}
+\subsection{Applying two sequential convolutional operations (mean and variance)}
+The crux of equipping a \ac{cnn} with probability distributions over weights instead of single point-estimates and being able to update the variational posterior probability distribution $q_{\theta}(w|\mathcal{D})$ by backpropagation lies in applying \textit{two} convolutional operations whereas filters with single point-estimates apply \textit{one}. As explained in the previous section, we deploy the local reparametrization trick and sample from the output $b$. Since the output $b$ is a function of mean $\mu_{ijwh}$ and variance $\alpha_{ijhw}\mu^2_{ijhw}$ among others, we are then able to compute the two variables determining a Gaussian probability distribution, namely mean $\mu_{ijhw}$ and variance $\alpha_{ijhw}\mu^2_{ijhw}$, separately. 
+\newline We do this in two convolutional operations: in the first, we treat the output $b$ as an output of a \ac{cnn} updated by frequentist inference. We optimize with Adam \cite{kingma2014adam} towards a single point-estimate which makes the validation accuracy of classifications increasing. We interpret this single point-estimate as the mean $\mu_{ijwh}$ of the variational posterior probability distributions $q_{\theta}(w|\mathcal{D})$. In the second convolutional operation, we learn the variance $\alpha_{ijhw}\mu^2_{ijhw}$. As this formulation of the variance includes the mean $\mu_{ijwh}$, only $\alpha_{ijhw}$ needs to be learned in the second convolutional operation \cite{molchanov2017variational}. In this way, we ensure that only one parameter is updated per convolutional operation, exactly how it would have been with a \ac{cnn} updated by frequentist inference. 
+\newline In other words, while we learn in the first convolutional operation the MAP of the variational posterior probability distribution $q_{\theta}(w|\mathcal{D})$, we observe in the second convolutional operation how much values for weights $w$ deviate from this MAP. This procedure is repeated in the fully-connected layers. In addition, to accelerate computation, to ensure a positive non-zero variance $\alpha_{ijhw}\mu^2_{ijhw}$, and to enhance accuracy, we learn $\log \alpha_{ijhw}$ and use the \textit{Softplus} activation function as further described in the Experiments section.
+%
+\section{Uncertainty estimation in \acp{cnn}}
+In classification tasks, we are interested in the predictive distribution $p_{\mathcal{D}}(y^*|x^*)$, where $x^*$ is an unseen data example and $y^*$ its predicted class. For a Bayesian neural network, this quantity is given by:
+\begin{align}
+p_{ \mathcal{D}}(y^*|x^*) = \int p_{w}(y^*|x^*) \ p_{\mathcal{D}}(w) \ dw
+\end{align}
+%
+In \textit{Bayes by Backprop}, Gaussian distributions $q_{\theta}(w|\mathcal{D}) \sim \mathcal{N}(w|\mu, \sigma^2)$, where $\theta = \{ \mu, \sigma \}$ are learned with some dataset $\mathcal{D} = \{ x_{i}, y_{i} \}_{i=1}^{n}$ as we explained previously. Due to the discrete and finite nature of most classification tasks, the predictive distribution is commonly assumed to be a categorical. Incorporating this aspect into the predictive distribution gives us
+\begin{align}
+p_{\mathcal{D}}(y^*|x^*)& = \int \text{Cat}(y^*|f_w(x^*)) \mathcal{N}(w|\mu, \sigma^2) \ dw\\
+&=  \int \prod_{c=1}^{C} f(x_{c}^*|w)^{y_{c}^*} \frac{1}{\sqrt{2\pi \sigma^2}} e^{-\frac{(w - \mu)^2}{2\sigma^2}} \ dw 
+\end{align}
+where $C$ is the total number of classes and $\sum_c f(x_{c}^*|w) = 1$.
+\newline As there is no closed-form solution due to the lack of conjugacy between categorical and Gaussian distributions, we cannot recover this distribution. However, we can construct an unbiased estimator of the expectation by sampling from $q_{\theta}(w|\mathcal{D})$:
+\begin{align}
+\mathbb{E}_{q}[p_{\mathcal{D}}(y^*|x^*)] &= \int q_{\theta}(w|\mathcal{D}) \ p_w(y|x) \ dw \\ & \approx \frac{1}{T}\sum_{t=1}^{T} p_{w_t}(y^*|x^*)
+\end{align}
+where $T$ is the pre-defined number of samples.
+This estimator allows us to evaluate the uncertainty of our predictions by the definition of variance, hence called \textit{predictive variance} and denoted as $\text{Var}_q$:
+\begin{align} \label{variance}
+\text{Var}_q\big( p(y^*|x^*) \big) = \mathbb{E}_q[yy^T] - \mathbb{E}_q[y]\mathbb{E}_q[y]^T
+\end{align}
+This quantity can be decomposed into the aleatoric and epistemic uncertainty \cite{kendall2017uncertainties,kwon2018uncertainty}. 
+\begin{equation}
+    \begin{aligned}
+    \text{Var}_q\big( p(y^*|x^*) \big) &= \underbrace{\frac{1}{T} \sum_{t=1}^T \text{diag}(\hat{p}_t)-\hat{p}_t \ \hat{p}_t^T}_\text{aleatoric} \\ &+ \underbrace{\frac{1}{T}\sum_{t=1}^T (\hat{p}_t - \Bar{p}) (\hat{p}_t - \Bar{p})^T}_\text{epistemic}
+    \end{aligned}
+\end{equation}
+where $\Bar{p} = \frac{1}{T}\sum_{t=1}^T \hat{p}_t$ and $\hat{p}_t = \text{Softmax}\big ( f_{w_{t}}(x^*) \big )$.
+\newline It is of paramount importance that uncertainty is split into aleatoric and epistemic quantities since it allows the modeler to evaluate the room for improvements: while aleatoric uncertainty (also known as statistical uncertainty) is merely a measure for the variation of ("noisy") data, epistemic uncertainty is caused by the model. Hence, a modeler can see whether the quality of the data is low (i.e. high aleatoric uncertainty), or the model itself is the cause for poor performances (i.e. high epistemic uncertainty). The former can be improved by gathering more data, whereas the latter requests to refine the model \cite{der2009aleatory}.
