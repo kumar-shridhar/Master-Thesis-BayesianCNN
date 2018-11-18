@@ -3,25 +3,28 @@
 \section{Experimentation Methodology}
 
 \section{Experiments} \label{experiments}
-For all conducted experiments, we implement the foregoing description of Bayesian \acp{cnn} with variational inference in LeNet-5 \cite{lecun1998gradient} and AlexNet \cite{krizhevsky2012imagenet}. The exact architecture specifications can be found in the Appendix and in our GitHub repository\footnote{\url{https://github.com/felix-laumann/Bayesian_CNN}}.
+For all conducted experiments, we implement the foregoing description of Bayesian \acp{cnn} with variational inference in LeNet-5 \cite{lecun1998gradient} and AlexNet \cite{krizhevsky2012imagenet}. The exact architecture specifications can be found in the Appendix and in our GitHub repository\footnote{\url{https://github.com/kumar-shridhar/PyTorch-BayesianCNN}}.
 We train the networks with the MNIST dataset of handwritten digits \cite{lecun1998gradient}, and with the CIFAR-10 and CIFAR-100 datasets \cite{krizhevsky2009learning} since these datasets serve widely as benchmarks for \acp{cnn}' performances. The originally chosen activation functions in all architectures are \textit{ReLU}, but we must introduce another, called \textit{Softplus}, see \eqref{softplus}, because of our method to apply two convolutional or fully-connected operations. As aforementioned, one of these is determining the mean $\mu$, and the other the variance $\alpha \mu^2$. Specifically, we apply the \textit{Softplus} function because we want to ensure that the variance $\alpha \mu^2$ never becomes zero. This would be equivalent to merely calculating the MAP, which can be interpreted as equivalent to a maximum likelihood estimation (MLE), which is further equivalent to utilising single point-estimates, hence frequentist inference. The \textit{Softplus} activation function is a smooth approximation of \textit{ReLU}. Although it is practically not influential, it has the subtle and analytically important advantage that it never becomes zero for $x \rightarrow -\infty$, whereas \textit{ReLU} becomes zero for $x \rightarrow -\infty$.
+\\ 
 \begin{equation}\label{softplus}
      \text{Softplus}(x) = \frac{1}{\beta} \cdot \log \big ( 1 + \exp(\beta \cdot x) \big )
 \end{equation}
+\\
 where $\beta$ is by default set to $1$.
 \newline All experiments are performed with the same hyper-parameters settings as stated in the Appendix.
 
 \subsection{Datasets}
 As aforementioned, we train various architectures on multiple datasets, namely MNIST, CIFAR-10, and CIFAR-100. 
 \newline
-\textbf{Classification on MNIST.}
-The MNIST dataset of handwritten digits consists of 60,000 training and 10,000 validation images of 28 by 28 pixels. Each image is labelled with its corresponding number (between zero and nine, inclusive).
+\subsubsection{MNIST}
+The MNIST database \cite{lecun-mnisthandwrittendigit-2010} of handwritten digits, has a training set of 60,000 examples, and a test set of 10,000 examples. It is a subset of a larger set available from NIST. The digits have been size-normalized and centered in a fixed-size image of 28 by 28 pixels. Each image is grayscaled and is labelled with its corresponding class that ranges from zero to nine.
+
 \newline
-\textbf{Classification on CIFAR-10.}
-The CIFAR-10 dataset consists of 60,000 colour images in 10 classes, with 6,000 images per class, each image 32 by 32 pixels large. Each of the classes has 5,000 training images and 1,000 validation images. 
+\subsubsection{CIFAR-10}
+The CIFAR-10 are labeled subsets of the 80 million tiny images dataset \cite{Torralba:2008:MTI:1444381.1444403}. The CIFAR-10 dataset has a training dataset of 50,000 colour images in 10 classes, with 5,000 training images per class, each image 32 by 32 pixels large. There are 10000 images for testing. 
 \newline
-\textbf{Classification on CIFAR-100.}
-This dataset is similar to the CIFAR-10, except it has 100 classes containing 600 images each. There are 500 training images and 100 validation images per class. The resolution of the images is as in CIFAR-10 32 by 32 pixels.
+\subsubsection{CIFAR-100}
+This dataset is similar to the CIFAR-10, and is a labeled subset of the 80 million tiny images dataset \cite{Torralba:2008:MTI:1444381.1444403}. The dataset has 100 classes containing 600 images each. There are 500 training images and 100 validation images per class. The images are colored with a resolution of 32 by 32 pixels.
 \subsection{Results}
 First, we evaluate the performance of our proposed method, Bayesian \acp{cnn} with variational inference. Table \ref{tab:results} shows a comparison of validation accuracies (in percentage) for architectures trained by two disparate Bayesian approaches, namely variational inference, i.e. \textit{Bayes by Backprop} and Dropout as proposed by Gal and Ghahramani \cite{gal2015bayesian}, plus frequentist inference for all three datasets. Bayesian \acp{cnn} trained by variational inference achieve validation accuracies comparable to their counter-architectures trained by frequentist inference. On MNIST, validation accuracies of the two disparate Bayesian approaches are comparable, but a Bayesian LeNet-5 with Dropout achieves a considerable higher validation accuracy on CIFAR-10, although we were not able to reproduce these reported results.
 \begin{table}[b!]
@@ -52,7 +55,7 @@ First, we evaluate the performance of our proposed method, Bayesian \acp{cnn} wi
 %
 \begin{figure}[t!] 
 \centering
-\includegraphics[width=\linewidth]{results_regularization.png}
+\includegraphics[width=\linewidth]{Chapter5/Figs/results_regularization.png}
 \caption{AlexNet trained on CIFAR-100 by Bayesian and frequentist inference. The frequentist AlexNet without Dropout overfits while the Bayesian AlexNet naturally incorporates an effect of regularization, comparable to a frequentist AlexNet with three Dropout layers.}
 \label{fig:regularisation}
 \end{figure}
@@ -61,7 +64,7 @@ First, we evaluate the performance of our proposed method, Bayesian \acp{cnn} wi
 %
 \begin{figure}[b!] 
 \begin{center}
-\includegraphics[width=\linewidth]{std_CNN.png}
+\includegraphics[width=\linewidth]{Chapter5/Figs/std_CNN.png}
 \caption{Convergence of the standard deviation of the Gaussian variational posterior probability distribution $q_{\theta}(w|\mathcal{D})$ of a random model parameter at epochs 1, 5, 20, 50, and 100. MNIST is trained on Bayesian LeNet-5.}
 \label{fig:std_CNN}
 \end{center}
@@ -69,7 +72,7 @@ First, we evaluate the performance of our proposed method, Bayesian \acp{cnn} wi
 %
 \begin{figure}[t!] 
 \begin{center}
-\includegraphics[width=\linewidth]{distribution.png}
+\includegraphics[width=\linewidth]{Chapter5/Figs/distribution.png}
 \caption{Convergence of the Gaussian variational posterior probability distribution $q_{\theta}(w|\mathcal{D})$ of a random model parameter at epochs 1, 5, 20, 50, and 100. CIFAR-10 is trained on Bayesian LeNet-5.}
 \label{fig:distribution}
 \end{center}
