@@ -12,6 +12,22 @@
     \graphicspath{{Chapter2/Figs/Vector/}{Chapter2/Figs/}}
 \fi
 
+\fbox{
+    \parbox{\textwidth}
+    {
+        Architecture guidelines for stable Deep Convolutional GANs
+        \begin{itemize}
+            \item Replace any pooling layers with strided convolutions (discriminator) and fractional-strided convolutions (generator).
+            \item Use batchnorm in both the generator and the discriminator.
+            \item Remove fully connected hidden layers for deeper architectures.
+            \item Use ReLU activation in generator for all layers except for the output, which uses Tanh.
+            \item Use LeakyReLU activation in the discriminator for all layers.
+        \end{itemize}
+    }
+}
+
+\pagebreak
+
 \section{Bayesian convolutional neural networks with variational inference}
 In this section, we explain our algorithm of building a \ac{cnn} with probability distributions over its weights in each filter, as seen in Figure \ref{fig:filter_scalar}, and apply variational inference, i.e. \textit{Bayes by Backprop}, to compute the intractable true posterior probability distribution, as described in the previous section. Notably, a fully Bayesian perspective on a \ac{cnn} is for most \ac{cnn} architectures not accomplished by merely placing probability distributions over weights in convolutional layers; it also requires probability distributions over weights in fully-connected layers (see Figure \ref{fig:CNNwithdist_grey}). 
 %

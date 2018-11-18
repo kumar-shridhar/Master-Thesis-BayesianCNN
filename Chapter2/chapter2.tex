@@ -13,13 +13,21 @@
 \fi
 
 
+\fbox{
+    \parbox{\textwidth}
+    {
+        Architecture guidelines for stable Deep Convolutional GANs
+        \begin{itemize}
+            \item Replace any pooling layers with strided convolutions (discriminator) and fractional-strided convolutions (generator).
+            \item Use batchnorm in both the generator and the discriminator.
+            \item Remove fully connected hidden layers for deeper architectures.
+            \item Use ReLU activation in generator for all layers except for the output, which uses Tanh.
+            \item Use LeakyReLU activation in the discriminator for all layers.
+        \end{itemize}
+    }
+}
 
-\vspace*{\fill} 
-\begin{quote} 
-\centering 
-\textit{“When an axon of cell A is near enough to excite a cell B and repeatedly or persistently takes part in firing it, some growth process or metabolic change takes place in one or both cells such that A’s efficiency, as one of the cells firing B, is increased.” - Hebb’s Rule}
-\end{quote}
-\vspace*{\fill}
+\pagebreak
 
 \section{Neural Networks}
 \subsection{Brain Analogies}

@@ -11,6 +11,22 @@
     \graphicspath{{Chapter3/Figs/Vector/}{Chapter3/Figs/}}
 \fi
 
+\fbox{
+    \parbox{\textwidth}
+    {
+        Architecture guidelines for stable Deep Convolutional GANs
+        \begin{itemize}
+            \item Replace any pooling layers with strided convolutions (discriminator) and fractional-strided convolutions (generator).
+            \item Use batchnorm in both the generator and the discriminator.
+            \item Remove fully connected hidden layers for deeper architectures.
+            \item Use ReLU activation in generator for all layers except for the output, which uses Tanh.
+            \item Use LeakyReLU activation in the discriminator for all layers.
+        \end{itemize}
+    }
+}
+
+\pagebreak
+
 \section{Related Work}
 Applying Bayesian methods to neural networks has been studied in the past with various approximation methods for the intractable true posterior probability distribution $p(w|\mathcal{D})$. Buntine and Weigend \cite{buntine1991bayesian} started to propose various \textit{maximum-a-posteriori} (MAP) schemes for neural networks. They were also the first who suggested second order derivatives in the prior probability distribution $p(w)$ to encourage smoothness of the resulting approximate posterior probability distribution. In subsequent work by Hinton and Van Camp \cite{hinton1993keeping}, the first variational methods were proposed which naturally served as a regularizer in neural networks. Hochreiter and Schmidhuber \cite{hochreiter1995simplifying} suggest taking an information theory perspective into account and utilising a minimum description length (MDL) loss. This penalises non-robust weights by means of an approximate penalty based upon perturbations of the weights on the outputs. Denker and LeCun \cite{denker1991transforming}, and MacKay \cite{mackay1995probable} investigated the posterior probability distributions of neural networks by using Laplace approximations. As a response to the limitations of Laplace approximations, Neal \cite{neal2012bayesian} investigated the use of hybrid Monte Carlo for training neural networks, although it has so far been difficult to apply these to the large sizes of neural networks built in modern applications. More recently, Graves \cite{graves2011practical} derived a variational inference scheme for neural networks and Blundell et al. \cite{blundell2015weight} extended this with an update for the variance that is unbiased and simpler to compute. Graves \cite{graves2016stochastic} derives a similar algorithm in the case of a mixture posterior probability distribution. 
 \newline Several authors have claimed that Dropout \cite{srivastava2014dropout} and Gaussian Dropout \cite{wang2013fast} can be viewed as approximate variational inference schemes \cite{gal2015bayesian, kingma2015variational}. We compare our results to Gal's \& Ghahramani's \cite{gal2015bayesian} and discuss the methodological differences in detail.

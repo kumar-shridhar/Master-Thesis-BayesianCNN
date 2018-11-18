@@ -1,5 +1,21 @@
 \chapter{Applications}
 
+\fbox{
+    \parbox{\textwidth}
+    {
+        Architecture guidelines for stable Deep Convolutional GANs
+        \begin{itemize}
+            \item Replace any pooling layers with strided convolutions (discriminator) and fractional-strided convolutions (generator).
+            \item Use batchnorm in both the generator and the discriminator.
+            \item Remove fully connected hidden layers for deeper architectures.
+            \item Use ReLU activation in generator for all layers except for the output, which uses Tanh.
+            \item Use LeakyReLU activation in the discriminator for all layers.
+        \end{itemize}
+    }
+}
+
+\pagebreak
+
 
 \section{BayesCNN for Image Classification}
 And now I begin my third chapter here \dots
@@ -52,18 +68,3 @@ Generative Adversarial Networks (GANs) \cite{goodfellow2014generative} can be us
 
 
 
-
-    
-\fbox{
-    \parbox{\textwidth}
-    {
-        Architecture guidelines for stable Deep Convolutional GANs
-        \begin{itemize}
-            \item Replace any pooling layers with strided convolutions (discriminator) and fractional-strided convolutions (generator).
-            \item Use batchnorm in both the generator and the discriminator.
-            \item Remove fully connected hidden layers for deeper architectures.
-            \item Use ReLU activation in generator for all layers except for the output, which uses Tanh.
-            \item Use LeakyReLU activation in the discriminator for all layers.
-        \end{itemize}
-    }
-}
