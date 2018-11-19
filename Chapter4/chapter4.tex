@@ -15,13 +15,13 @@
 \fbox{
     \parbox{\textwidth}
     {
-        Architecture guidelines for stable Deep Convolutional GANs
+        Chapter Overview
         \begin{itemize}
-            \item Replace any pooling layers with strided convolutions (discriminator) and fractional-strided convolutions (generator).
-            \item Use batchnorm in both the generator and the discriminator.
-            \item Remove fully connected hidden layers for deeper architectures.
-            \item Use ReLU activation in generator for all layers except for the output, which uses Tanh.
-            \item Use LeakyReLU activation in the discriminator for all layers.
+            \item Bayesian \acp{cnn} with Variational Inference based on Bayes by Backprop.
+            \item Bayesian convolutional operations with mean and variance
+            \item Local reparameterization trick for Bayesian \acp{cnn}.
+            \item Uncertainity estimation in a Bayesian network.
+            \item Using L1 norm for reducing the number of parameters in a Bayesian network.
         \end{itemize}
     }
 }

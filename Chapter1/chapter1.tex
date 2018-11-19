@@ -2,7 +2,6 @@
 %*******************************************************************************
 %*********************************** First Chapter *****************************
 %*******************************************************************************
-
 \chapter{Introduction}  %Title of the First Chapter
 
 \ifpdf
@@ -14,13 +13,14 @@
 
 %********************************** %First Section  **************************************
 
+\newacro{cnn}[\textsc{Cnn}]{Convolutional neural network}
 
 \section{Problem Statement}
 
 Deep Neural Networks (DNNs), are connectionist systems that learn to perform tasks by learning on examples without having a prior knowledge about the tasks. 
 They easily scale to millions of data points and yet remain tractable to optimize with stochastic gradient descent.
 
-Convolutional Neural Networks (CNNs), a variant of DNNs, have already surpassed human accuracy in the realm of image classification (e.g. \cite{he2016deep,simonyan2014very,krizhevsky2012imagenet}). Due to the capacity of CNNs to fit on a wide diversity of non-linear data points, they require large amount of training data. This often makes CNNs and Neural Networks in general, prone to overfitting on small datasets. The model tends to fit well to the training data, but are not predictive for new data. This often makes the Neural Networks incapable of correctly assessing the uncertainty in the training data and hence leads to overly confident decisions about the correct class, prediction or action.
+Convolutional Neural Networks (CNNs), a variant of DNNs, have already surpassed human accuracy in the realm of image classification (e.g. \cite{he2016deep,simonyan2014very,krizhevsky2012imagenet}). Due to the capacity of \acp{cnn} to fit on a wide diversity of non-linear data points, they require large amount of training data. This often makes \acp{cnn}s and Neural Networks in general, prone to overfitting on small datasets. The model tends to fit well to the training data, but are not predictive for new data. This often makes the Neural Networks incapable of correctly assessing the uncertainty in the training data and hence leads to overly confident decisions about the correct class, prediction or action.
 
 Various regularization techniques for controlling overfitting are used in practice namely  early stopping, weight decay, L1, L2 regularizations and currently the most popular and empirically effective technique being \emph{dropout}~\cite{hinton2012improving}. 
 
@@ -32,10 +32,10 @@ Deep Neural Networks have been successfully applied to many domains, including s
 On the other hand, Bayesian neural networks (NNs) are more robust to over-fittings, and can easily learn from small datasets. Bayesian approach further offers uncertainty estimates via its parameters in form of probability distributions (see Figure \ref{fig:Scalar_Bayesian_Distribution}). At the same time, by using a prior probability distribution to integrate out the parameters, we compute the average across many models during training, which gives a regularization effect to the network, thus preventing overfitting.
 
 
-Bayesian posterior inference over the neural network parameters is a theoretically attractive method for controlling overfitting; however, modelling a distribution over the kernels (also known as filters) of a CNN has never been attempted successfully before, perhaps because of the vast number of parameters and extremely large models commonly used in practical applications.
+Bayesian posterior inference over the neural network parameters is a theoretically attractive method for controlling overfitting; however, modelling a distribution over the kernels (also known as filters) of a \acp{cnn} has never been attempted successfully before, perhaps because of the vast number of parameters and extremely large models commonly used in practical applications.
 
 Even with a small number of parameters, inferring model posterior in a Bayesian NN is a difficult task. Approximations to the model posterior are often used instead, with variational inference being a popular approach. In this approach one would model the posterior using a simple \textit{variational} distribution such as a Gaussian, and try to fit the distribution's parameters to be as close as possible to the true posterior. This is done by minimising the Kullback-Leibler divergence from the true posterior. Many have followed this approach in the past for standard NN models \citep{hinton1993keeping,barber1998ensemble,graves2011practical,blundell2015weight}.
-But the variational approach used to approximate the posterior in Bayesian NNs can be fairly computationally expensive -- the use of Gaussian approximating distributions increases the number of model parameters considerably, without increasing model capacity by much. \citet{blundell2015weight} for example use Gaussian distributions for Bayesian NN posterior approximation and have doubled the number of model parameters, yet report the same predictive performance as traditional approaches using dropout. This makes the approach unsuitable for use with CNNs as the increase in the number of parameters is too costly.
+But the variational approach used to approximate the posterior in Bayesian NNs can be fairly computationally expensive -- the use of Gaussian approximating distributions increases the number of model parameters considerably, without increasing model capacity by much. \citet{blundell2015weight} for example use Gaussian distributions for Bayesian NN posterior approximation and have doubled the number of model parameters, yet report the same predictive performance as traditional approaches using dropout. This makes the approach unsuitable for use with \acp{cnn}s as the increase in the number of parameters is too costly.
 
 \begin{figure}[t]
 \begin{center}

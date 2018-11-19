@@ -14,13 +14,13 @@
 \fbox{
     \parbox{\textwidth}
     {
-        Architecture guidelines for stable Deep Convolutional GANs
+        Chapter Overview
         \begin{itemize}
-            \item Replace any pooling layers with strided convolutions (discriminator) and fractional-strided convolutions (generator).
-            \item Use batchnorm in both the generator and the discriminator.
-            \item Remove fully connected hidden layers for deeper architectures.
-            \item Use ReLU activation in generator for all layers except for the output, which uses Tanh.
-            \item Use LeakyReLU activation in the discriminator for all layers.
+            \item How Bayeian Methods were applied to Neural Networks for the intractable true posterior distribution.
+            \item Various ways of training Neural Networks posterior probability distributions : Laplace approximations, Monte Carlo and Variational Inference.
+            \item Proposals on Dropout and Gaussian Dropout as Variational Inference schemes.
+            \item Work done in the past for uncertainity estimation in Neural Network.
+            \item Ways to reduce the number of parameters in a model.
         \end{itemize}
     }
 }

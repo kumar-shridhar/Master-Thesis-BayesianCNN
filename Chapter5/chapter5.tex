@@ -3,13 +3,13 @@
 \fbox{
     \parbox{\textwidth}
     {
-        Architecture guidelines for stable Deep Convolutional GANs
+        Chapter Overview
         \begin{itemize}
-            \item Replace any pooling layers with strided convolutions (discriminator) and fractional-strided convolutions (generator).
-            \item Use batchnorm in both the generator and the discriminator.
-            \item Remove fully connected hidden layers for deeper architectures.
-            \item Use ReLU activation in generator for all layers except for the output, which uses Tanh.
-            \item Use LeakyReLU activation in the discriminator for all layers.
+            \item Applying Bayesian \acp{cnn} for the task of Image Recognition on MNIST, CIFAR-10, CIFAR-100 and STL-10 datasets.
+            \item Comparison of results of Bayesian \acp{CNN} with Normal \acp{cnn} architectures on similar datasets.
+            \item Regularization effect of Bayesian Network with dropouts.
+            \item Distribution of mean and variance in Bayesian \acp{cnn} over time. 
+            \item Parameters comparison before and after model pruning. 
         \end{itemize}
     }
 }
