@@ -42,7 +42,7 @@ A psychologist, Rosenblatt conceived of the Percetron as a simplified mathematic
 \end{center}
 \end{figure}
 
-\subsection{Artificial Neural Network}
+\subsection{Multi Layer Perceptron}
 
 An Artificial Neural Network (ANN) is an information processing paradigm that is inspired by the way biological nervous systems, such as the brain, process information. The key element of this paradigm is the novel structure of the information processing system. It is composed of a large number of highly interconnected processing elements (neurons) working in unison to solve specific problems. ANNs, like people, learn by example. An ANN is configured for a specific application, such as pattern recognition or data classification, through a learning process. Learning in biological systems involves adjustments to the synaptic connections that exist between the neurons. This is true of ANNs as well.
 
@@ -162,7 +162,6 @@ p(y^* | \x^*, \X, \Y) \approx
 \end{align}
 with $\widehat{\bo}_t \sim q \big( \bo \big)$. This is referred to as MC dropout.
 
-\subsection{Monte  Carlo  variational  inference}
 \subsection{Local  reparametrisation  trick}
 
 We utilise the local reparameterization trick \cite{kingma2015variational} and apply it to \acp{cnn}. Following \cite{kingma2015variational,neklyudov2018variance}, we do not sample the weights $w$, but we sample instead layer activations $b$ due to its consequent computational acceleration. The variational posterior probability distribution $q_{\theta}(w_{ijhw}|\mathcal{D})=\mathcal{N}(\mu_{ijhw},\alpha_{ijhw}\mu^2_{ijhw})$ (where $i$ and $j$ are the input, respectively output layers, $h$ and $w$ the height, respectively width of any given filter) allows to implement the local reparamerization trick in convolutional layers. This results in the subsequent equation for convolutional layer activations $b$:
@@ -171,7 +170,8 @@ We utilise the local reparameterization trick \cite{kingma2015variational} and a
 \end{equation}
 where $\epsilon_j \sim \mathcal{N}(0,1)$, $A_i$ is the receptive field, $\ast$ signalises the convolutional operation, and $\odot$ the component-wise multiplication.
 
-\section{Bayesian Uncertainities}
+\section{Weight Uncertainities}
+\subsection{Bayesian Uncertainities}
 
 There are two major types of uncertainty one can model. \textit{Aleatoric} uncertainty captures noise inherent in the observations. On the other hand, \textit{epistemic} uncertainty accounts for uncertainty in the model -- uncertainty which can be explained away given enough data. Traditionally it has been difficult to model epistemic uncertainty in computer vision, but with new Bayesian deep learning tools this is now possible.
 We study the benefits of modeling epistemic vs.\ aleatoric uncertainty in Bayesian deep learning models for vision tasks. For this we present a Bayesian deep learning framework combining input-dependent aleatoric uncertainty together with epistemic uncertainty. We study models under the framework with per-pixel semantic segmentation and depth regression tasks. Further, our explicit uncertainty formulation leads to new loss functions for these tasks, which can be interpreted as learned attenuation. This makes the loss more robust to noisy data, also giving new state-of-the-art results on segmentation and depth regression benchmarks. 
@@ -186,7 +186,8 @@ Heteroscedastic uncertainty is especially important for computer vision applicat
 
 Existing approaches to Bayesian deep learning capture either epistemic uncertainty alone, or aleatoric uncertainty alone \cite{gal2016thesis}. These uncertainties are formalised as probability distributions over either the model parameters, or model outputs, respectively. Epistemic uncertainty is modeled by placing a prior distribution over a model's weights, and then trying to capture how much these weights vary given some data. Aleatoric uncertainty on the other hand is modeled by placing a distribution over the output of the model. For example, in regression our outputs might be modeled as corrupted with Gaussian random noise. In this case we are interested in learning the noise's variance as a function of different inputs (such noise can also be modeled with a constant value for all data points, but this is of less practical interest). These uncertainties, in the context of Bayesian deep learning, are explained in more detail in this section. 
 
-\section{Bayes by Backprop}
+\section{Backpropagation}
+\subsection{Bayes by Backprop}
 \textit{Bayes by Backprop} \cite{graves2011practical, blundell2015weight} is a variational inference method to learn the posterior distribution on the weights $w \sim q_{\theta}(w|\mathcal{D})$ of a neural network from which weights $w$ can be sampled in backpropagation. 
 It regularises the weights by minimising a compression cost, known as the variational free energy or the expected lower bound on the marginal likelihood.
 
@@ -212,4 +213,6 @@ We sample the weights $w$ from the variational distribution $q_{\theta}(w|\mathc
 %
 where $n$ is the number of draws.
 \newline We sample $w^{(i)}$ from $q_{\theta}(w|\mathcal{D})$. The uncertainty afforded by \textit{Bayes by Backprop} trained neural networks has been used successfully for training feedforward neural networks in both supervised and reinforcement learning environments \cite{blundell2015weight,lipton2016efficient,houthooft2016curiosity}, for training recurrent neural networks \cite{fortunato2017bayesian}, but has not been applied to convolutional neural networks to-date.
+
+\section{Model weights pruning}
 

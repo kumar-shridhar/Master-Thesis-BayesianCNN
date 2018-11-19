@@ -16,9 +16,7 @@
 
 \pagebreak
 
-\section{Experimentation Methodology}
-
-\section{Experiments} \label{experiments}
+\section{Experimentation Methodology} \label{experiments}
 For all conducted experiments, we implement the foregoing description of Bayesian \acp{cnn} with variational inference in LeNet-5 \cite{lecun1998gradient} and AlexNet \cite{krizhevsky2012imagenet}. The exact architecture specifications can be found in the Appendix and in our GitHub repository\footnote{\url{https://github.com/kumar-shridhar/PyTorch-BayesianCNN}}.
 We train the networks with the MNIST dataset of handwritten digits \cite{lecun1998gradient}, and with the CIFAR-10 and CIFAR-100 datasets \cite{krizhevsky2009learning} since these datasets serve widely as benchmarks for \acp{cnn}' performances. The originally chosen activation functions in all architectures are \textit{ReLU}, but we must introduce another, called \textit{Softplus}, see \eqref{softplus}, because of our method to apply two convolutional or fully-connected operations. As aforementioned, one of these is determining the mean $\mu$, and the other the variance $\alpha \mu^2$. Specifically, we apply the \textit{Softplus} function because we want to ensure that the variance $\alpha \mu^2$ never becomes zero. This would be equivalent to merely calculating the MAP, which can be interpreted as equivalent to a maximum likelihood estimation (MLE), which is further equivalent to utilising single point-estimates, hence frequentist inference. The \textit{Softplus} activation function is a smooth approximation of \textit{ReLU}. Although it is practically not influential, it has the subtle and analytically important advantage that it never becomes zero for $x \rightarrow -\infty$, whereas \textit{ReLU} becomes zero for $x \rightarrow -\infty$.
 \\ 
@@ -29,6 +27,7 @@ We train the networks with the MNIST dataset of handwritten digits \cite{lecun19
 where $\beta$ is by default set to $1$.
 \newline All experiments are performed with the same hyper-parameters settings as stated in the Appendix.
 
+\section{Case Study 1: Small Datasets (MNIST, CIFAR-10, STL-10)}
 \subsection{Datasets}
 As aforementioned, we train various architectures on multiple datasets, namely MNIST, CIFAR-10, and CIFAR-100. 
 \newline
@@ -114,8 +113,12 @@ First, we evaluate the performance of our proposed method, Bayesian \acp{cnn} wi
     \label{tab:uncertainty}
 \end{table}
 %
-\section{Case Study 1: Small Datasets (MNIST, CIFAR-10, STL-10)}
 \section{Case Study 2: Large Dataset (CIFAR-100)}
+\subsection{Dataset}
+\subsection{Results}
+
+\section{Uncertainity estimation}
+\section{Model Pruning}
 
 \ifpdf
     \graphicspath{{Chapter2/Figs/Raster/}{Chapter2/Figs/PDF/}{Chapter2/Figs/}}
