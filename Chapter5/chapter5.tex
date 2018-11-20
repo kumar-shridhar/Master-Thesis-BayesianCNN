@@ -17,8 +17,10 @@
 \pagebreak
 
 \section{Experimentation Methodology} \label{experiments}
-For all conducted experiments, we implement the foregoing description of Bayesian \acp{cnn} with variational inference in LeNet-5 \cite{lecun1998gradient} and AlexNet \cite{krizhevsky2012imagenet}. The exact architecture specifications can be found in the Appendix and in our GitHub repository\footnote{\url{https://github.com/kumar-shridhar/PyTorch-BayesianCNN}}.
-We train the networks with the MNIST dataset of handwritten digits \cite{lecun1998gradient}, and with the CIFAR-10 and CIFAR-100 datasets \cite{krizhevsky2009learning} since these datasets serve widely as benchmarks for \acp{cnn}' performances. The originally chosen activation functions in all architectures are \textit{ReLU}, but we must introduce another, called \textit{Softplus}, see \eqref{softplus}, because of our method to apply two convolutional or fully-connected operations. As aforementioned, one of these is determining the mean $\mu$, and the other the variance $\alpha \mu^2$. Specifically, we apply the \textit{Softplus} function because we want to ensure that the variance $\alpha \mu^2$ never becomes zero. This would be equivalent to merely calculating the MAP, which can be interpreted as equivalent to a maximum likelihood estimation (MLE), which is further equivalent to utilising single point-estimates, hence frequentist inference. The \textit{Softplus} activation function is a smooth approximation of \textit{ReLU}. Although it is practically not influential, it has the subtle and analytically important advantage that it never becomes zero for $x \rightarrow -\infty$, whereas \textit{ReLU} becomes zero for $x \rightarrow -\infty$.
+
+\subsubsection{Activation Function}
+
+The originally chosen activation functions in all architectures are \textit{ReLU}, but we must introduce another, called \textit{Softplus}, see \eqref{softplus}, because of our method to apply two convolutional or fully-connected operations. As aforementioned, one of these is determining the mean $\mu$, and the other the variance $\alpha \mu^2$. Specifically, we apply the \textit{Softplus} function because we want to ensure that the variance $\alpha \mu^2$ never becomes zero. This would be equivalent to merely calculating the MAP, which can be interpreted as equivalent to a maximum likelihood estimation (MLE), which is further equivalent to utilising single point-estimates, hence frequentist inference. The \textit{Softplus} activation function is a smooth approximation of \textit{ReLU}. Although it is practically not influential, it has the subtle and analytically important advantage that it never becomes zero for $x \rightarrow -\infty$, whereas \textit{ReLU} becomes zero for $x \rightarrow -\infty$.
 \\ 
 \begin{equation}\label{softplus}
      \text{Softplus}(x) = \frac{1}{\beta} \cdot \log \big ( 1 + \exp(\beta \cdot x) \big )
@@ -27,19 +29,97 @@ We train the networks with the MNIST dataset of handwritten digits \cite{lecun19
 where $\beta$ is by default set to $1$.
 \newline All experiments are performed with the same hyper-parameters settings as stated in the Appendix.
 
-\section{Case Study 1: Small Datasets (MNIST, CIFAR-10, STL-10)}
+\subsubsection{Network Architecture}
+
+For all conducted experiments, we implement the foregoing description of Bayesian \acp{cnn} with variational inference in LeNet-5 \cite{lecun1998gradient} and AlexNet \cite{krizhevsky2012imagenet}. The exact architecture specifications can be found in the Appendix and in our GitHub repository\footnote{\url{https://github.com/kumar-shridhar/PyTorch-BayesianCNN}}.
+
+\subsubsection{Objective Function}
+TO learn the objective function, we use \textit{Bayes by Backprop} \cite{graves2011practical, blundell2015weight}, which is a variational inference method to learn the posterior distribution on the weights $w \sim q_{\theta}(w|\mathcal{D})$ of a neural network from which weights $w$ can be sampled in backpropagation. 
+It regularises the weights by minimising a compression cost, known as the variational free energy or the expected lower bound on the marginal likelihood.
+
+Since the true posterior is typically intractable, an approximate distribution $q_{\theta}(w|\mathcal{D})$ is defined that is aimed to be as similar as possible to the true posterior $p(w|\mathcal{D})$, measured by the Kullback-Leibler (KL) divergence \cite{kullback1951information}. Hence, we define the optimal parameters $\theta^{opt}$ as
+\begin{equation}
+    \begin{aligned} \label{KL}
+        \theta^{opt}&=\underset{\theta}{\text{arg min}}\ \text{KL} \ [q_{\theta}(w|\mathcal{D})\|p(w|\mathcal{D})] \\
+        &=\underset{\theta}{\text{arg min}}\ \text{KL} \ [q_{\theta}(w|\mathcal{D})\|p(w)] \\ & -\mathbb{E}_{q(w|\theta)}[\log p(\mathcal{D}|w)]+\log p(\mathcal{D})
+    \end{aligned}
+\end{equation}
+
+where
+\begin{equation}
+    \text{KL} \ [q_{\theta}(w|\mathcal{D})\|p(w)]= \int q_{\theta}(w|\mathcal{D})\log\frac{q_{\theta}(w|\mathcal{D})}{p(w)}dw .
+\end{equation}
+This derivation forms an optimisation problem with a resulting cost function widely known as \textit{variational free energy} \cite{neal1998view,yedidia2005constructing,friston2007variational} which is built upon two terms: the former, $\text{KL} \ [q_{\theta}(w|\mathcal{D})\|p(w)]$, is dependent on the definition of the prior $p(w)$, thus called complexity cost, whereas the latter, $\mathbb{E}_{q(w|\theta)}[\log p(\mathcal{D}|w)]$, is dependent on the data $p(\mathcal{D}|w)$, thus called likelihood cost. 
+The term $\log p(\mathcal{D})$ can be omitted in the optimisation because it is constant.
+\newline Since the KL-divergence is also intractable to compute exactly, we follow a stochastic variational method \cite{graves2011practical,blundell2015weight}.
+We sample the weights $w$ from the variational distribution $q_{\theta}(w|\mathcal{D})$ since it is much more probable to draw samples which are appropriate for numerical methods from the variational posterior $q_{\theta}(w|\mathcal{D})$ than from the true posterior $p(w|\mathcal{D})$. Consequently, we arrive at the tractable cost function \eqref{cost} which is aimed to be optimized, i.e. minimised w.r.t. $\theta$, during training:
+\begin{equation} \label{cost}
+    \mathcal{F}(\mathcal{D}, \theta)\approx \sum_{i=1}^n \log q_{\theta}(w^{(i)}|\mathcal{D})-\log p(w^{(i)})-\log p(\mathcal{D}|w^{(i)})
+\end{equation}
+%
+where $n$ is the number of draws.
+
+Let's break the Objective Function in \eqref{cost} and discuss in more details. 
+\subsubsection{Variational Posterior }
+
+The first term in the equation \eqref{cost} is the variational posterior. The variational posterior is taken as Gaussian distribution centered around mean $\mu$ and variance as $\sigma^2$. 
+
+\begin{equation}
+    q_{\theta}(w^{(i)}|\mathcal{D})= \prod_{i} \mathcal{N}(w_{i} | \mu,\sigma^2)
+\end{equation}
+
+We will take the log and the log posterior is defined as :
+
+\begin{equation}
+    log(q_{\theta}(w^{(i)}|\mathcal{D}))= \sum_{i}log \mathcal{N}(w_{i} | \mu,\sigma^2)
+\end{equation}
+
+\subsubsection{Prior}
+
+The second term in the equation \eqref{cost} is the prior over the weights and we define the prior over the weights as a product of individual Gaussians :
+
+\begin{equation}
+    p(w^{(i)})= \prod_{i} \mathcal{N}(w_{i} | 0,\sigma_{p}^2)
+\end{equation}
+
+We will take the log and the log prior is defined as:
+
+\begin{equation}
+    log (p(w^{(i)}))= \sum_{i} log \mathcal{N}(w_{i} | 0,\sigma_{p}^2)
+\end{equation}
+
+\subsubsection{ Likelihood }
+
+The final term of the equation \eqref{cost} $\log p(\mathcal{D}|w^{(i)})$ is the likelihood term and is computed using the softmax function.
+
+\subsubsection{Parameter Initialization}
+
+We use a Gaussian distribution and we store mean and variance values instead of just one weight. The way mean $\mu$ and variance $\sigma$ is computed is defined in the previous chapter. Variance cannot be negative and it is ensured by using \textit{softplus} as activation function. We express variance $\sigma$ as $\sigma_{i}=softplus(\rho_{i})$ where $\rho$ is an unconstrained parameter. \\
+
+We take the Gaussian distribution and initialize mean $\mu$ as 0 and variance $\sigma$ (and hence $\rho$) as very small number. We perform gradient descent over $\theta$ = ($\mu$, $\rho$), and individual weight $w_{i} \sim \mathcal{N} (w_{i} | \mu_{i}, \sigma_{i}$).  
+
+\subsubsection{Optimizer}
+
+For all our tasks, we take Adam optimizer \cite{KingmaB14} to optmize the parameters. We also perform the local reparameterization trick as mentioned in the previous section and take the gradient of the combined loss function with respect to the variational parameters ($\mu$, $\rho$).
+
+\subsubsection{Model Pruning}
+
+We take the weights of all the layers of the network, apply a L1 norm over it and for all the weights value as 0 are removed and the model is pruned. \\ Also, since the Bayesian \acp{cnn} has twice the number of parameters ($\mu$, $\sigma$) compared to a frequentist network (only 1 weight), we reduce the size of our network to half *(AlexNet and LeNet- 5) by reducing the number of filters to half. 
+
+\section{Case Study 1: Small Datasets (MNIST, CIFAR-10)}
+
+We train the networks with the MNIST dataset of handwritten digits \cite{lecun1998gradient}, and CIFAR-10 dataset \cite{krizhevsky2009learning} since these datasets serve widely as benchmarks for \acp{cnn}' performances. 
+
 \subsection{Datasets}
-As aforementioned, we train various architectures on multiple datasets, namely MNIST, CIFAR-10, and CIFAR-100. 
 \newline
 \subsubsection{MNIST}
 The MNIST database \cite{lecun-mnisthandwrittendigit-2010} of handwritten digits, has a training set of 60,000 examples, and a test set of 10,000 examples. It is a subset of a larger set available from NIST. The digits have been size-normalized and centered in a fixed-size image of 28 by 28 pixels. Each image is grayscaled and is labelled with its corresponding class that ranges from zero to nine.
-
 \newline
+
 \subsubsection{CIFAR-10}
 The CIFAR-10 are labeled subsets of the 80 million tiny images dataset \cite{Torralba:2008:MTI:1444381.1444403}. The CIFAR-10 dataset has a training dataset of 50,000 colour images in 10 classes, with 5,000 training images per class, each image 32 by 32 pixels large. There are 10000 images for testing. 
 \newline
-\subsubsection{CIFAR-100}
-This dataset is similar to the CIFAR-10, and is a labeled subset of the 80 million tiny images dataset \cite{Torralba:2008:MTI:1444381.1444403}. The dataset has 100 classes containing 600 images each. There are 500 training images and 100 validation images per class. The images are colored with a resolution of 32 by 32 pixels.
+
 \subsection{Results}
 First, we evaluate the performance of our proposed method, Bayesian \acp{cnn} with variational inference. Table \ref{tab:results} shows a comparison of validation accuracies (in percentage) for architectures trained by two disparate Bayesian approaches, namely variational inference, i.e. \textit{Bayes by Backprop} and Dropout as proposed by Gal and Ghahramani \cite{gal2015bayesian}, plus frequentist inference for all three datasets. Bayesian \acp{cnn} trained by variational inference achieve validation accuracies comparable to their counter-architectures trained by frequentist inference. On MNIST, validation accuracies of the two disparate Bayesian approaches are comparable, but a Bayesian LeNet-5 with Dropout achieves a considerable higher validation accuracy on CIFAR-10, although we were not able to reproduce these reported results.
 \begin{table}[b!]
@@ -115,6 +195,10 @@ First, we evaluate the performance of our proposed method, Bayesian \acp{cnn} wi
 %
 \section{Case Study 2: Large Dataset (CIFAR-100)}
 \subsection{Dataset}
+
+\subsubsection{CIFAR-100}
+This dataset is similar to the CIFAR-10, and is a labeled subset of the 80 million tiny images dataset \cite{Torralba:2008:MTI:1444381.1444403}. The dataset has 100 classes containing 600 images each. There are 500 training images and 100 validation images per class. The images are colored with a resolution of 32 by 32 pixels.
+
 \subsection{Results}
 
 \section{Uncertainity estimation}
