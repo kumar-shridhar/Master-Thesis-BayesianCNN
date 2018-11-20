@@ -104,7 +104,7 @@ For all our tasks, we take Adam optimizer \cite{KingmaB14} to optmize the parame
 
 \subsubsection{Model Pruning}
 
-We take the weights of all the layers of the network, apply a L1 norm over it and for all the weights value as 0 are removed and the model is pruned. \\ Also, since the Bayesian \acp{cnn} has twice the number of parameters ($\mu$, $\sigma$) compared to a frequentist network (only 1 weight), we reduce the size of our network to half *(AlexNet and LeNet- 5) by reducing the number of filters to half. 
+We take the weights of all the layers of the network, apply a L1 norm over it and for all the weights value as 0 are removed and the model is pruned. \\ Also, since the Bayesian \acp{cnn} has twice the number of parameters ($\mu$, $\sigma$) compared to a frequentist network (only 1 weight), we reduce the size of our network to half (AlexNet and LeNet- 5) by reducing the number of filters to half. The architecure used is mentioned in the last section of this chapter.
 
 \section{Case Study 1: Small Datasets (MNIST, CIFAR-10)}
 
@@ -121,43 +121,48 @@ The CIFAR-10 are labeled subsets of the 80 million tiny images dataset \cite{Tor
 \newline
 
 \subsection{Results}
-First, we evaluate the performance of our proposed method, Bayesian \acp{cnn} with variational inference. Table \ref{tab:results} shows a comparison of validation accuracies (in percentage) for architectures trained by two disparate Bayesian approaches, namely variational inference, i.e. \textit{Bayes by Backprop} and Dropout as proposed by Gal and Ghahramani \cite{gal2015bayesian}, plus frequentist inference for all three datasets. Bayesian \acp{cnn} trained by variational inference achieve validation accuracies comparable to their counter-architectures trained by frequentist inference. On MNIST, validation accuracies of the two disparate Bayesian approaches are comparable, but a Bayesian LeNet-5 with Dropout achieves a considerable higher validation accuracy on CIFAR-10, although we were not able to reproduce these reported results.
-\begin{table}[b!]
+First, we evaluate the performance of our proposed method, Bayesian \acp{cnn} with variational inference. Table \ref{tab:results} shows a comparison of validation accuracies (in percentage) for architectures trained by two disparate Bayesian approaches, namely variational inference, i.e. \textit{Bayes by Backprop} and Dropout as proposed by Gal and Ghahramani \cite{gal2015bayesian}.\\
+
+We compare the results of these two approaches to frequentist inference approach for both the datasets. Bayesian \acp{cnn} trained by variational inference achieve validation accuracies comparable to their counter-architectures trained by frequentist inference. On MNIST, validation accuracies of the two disparate Bayesian approaches are comparable, but a Bayesian LeNet-5 with Dropout achieves a considerable higher validation accuracy on CIFAR-10, although we were not able to reproduce these reported results.
+\begin{table}[H]
 \tiny
     \centering
     \renewcommand{\arraystretch}{1.5}
     \resizebox{\linewidth}{!}{
     \begin{tabular}{ l  c  c  c  c } 
      \hline
-      \empty & MNIST & CIFAR-10 & CIFAR-100  \\ [0.75ex]
+      \empty & MNIST & CIFAR-10   \\ [0.75ex]
      \hline
-     Bayesian AlexNet (with VI) & 99 & 73 & 36  \\
+     Bayesian AlexNet (with VI) & 99 & 73   \\
      
-     Frequentist AlexNet & 99 & 73 & 38  \\
+     Frequentist AlexNet & 99 & 73   \\
      \hdashline
-     Bayesian LeNet-5 (with VI) & 98 & 69 & 31  \\
+     Bayesian LeNet-5 (with VI) & 98 & 69   \\
      
-     Frequentist LeNet-5 & 98 & 68 & 33  \\
+     Frequentist LeNet-5 & 98 & 68   \\
      \hdashline
-     Bayesian LeNet-5 (with Dropout) & 99.5 & 83 & \empty \\ 
+     Bayesian LeNet-5 (with Dropout) & 99.5 & 83  \\ 
      \hline \\
-    \end{tabular}} 
+    \end{tabular}}
     \renewcommand{\arraystretch}{1.5}
-    \caption{Comparison of validation accuracies (in percentage) for different architectures with variational inference (VI), frequentist inference and Dropout as a Bayesian approximation as proposed by Gal and Ghahramani \cite{gal2015bayesian} for MNIST, CIFAR-10, and CIFAR-100.}
+    \caption{Comparison of validation accuracies (in percentage) for different architectures with variational inference (VI), frequentist inference and Dropout as a Bayesian approximation as proposed by Gal and Ghahramani \cite{gal2015bayesian} for MNIST, and CIFAR-10.}
     \label{tab:results}
 \end{table}
-\newline In Figure \ref{fig:regularisation}, we show how Bayesian networks incorporate naturally effects of regularization, exemplified on AlexNet. While an AlexNet trained by frequentist inference without any regularization overfits greatly on CIFAR-100, an AlexNet trained by Bayesian inference on CIFAR-100 does not. It performs equivalently to an AlexNet trained by frequentist inference with three layers of Dropout after the first, fourth, and sixth layers in the architecture. In initial epochs, Bayesian \acp{cnn} trained by variational inference start with a low validation accuracy compared to architectures trained by frequentist inference. This must deduce from the initialization of the variational posterior probability distributions $q_{\theta}(w|\mathcal{D})$ as uniform distributions, while initial point-estimates in architectures trained by frequentist inference are randomly drawn from a standard Gaussian distribution. The latter initialization method ensures the initialized weights are neither too small nor too large. In other words, the motivation of the latter initialization is to start with weights such that the activation functions do not let them begin in saturated or dead regions. This is not true in case of uniform distributions and hence, Bayesian \acp{cnn}' starting validation accuracies can be comparably low.
-%
+
 \begin{figure}[t!] 
-\centering
-\includegraphics[width=\linewidth]{Chapter5/Figs/results_regularization.png}
-\caption{AlexNet trained on CIFAR-100 by Bayesian and frequentist inference. The frequentist AlexNet without Dropout overfits while the Bayesian AlexNet naturally incorporates an effect of regularization, comparable to a frequentist AlexNet with three Dropout layers.}
-\label{fig:regularisation}
-\end{figure}
-%
+\begin{center}
+\includegraphics[width=\linewidth]{Chapter5/Figs/results_mnist_CIFAR10.png}
+\caption{Comparison of Validation Accuracies of Bayesian AlexNet and LeNet-5 with frequentist approach on MNIST and CIFAR-10 datasets}
+\label{fig:MnistCIFAR10reesults}
+\end{center}
+\end{figure} 
+
+\newline Figure \ref{fig:MnistCIFAR10reesults} shows the validation accuracies of Bayesian vs Non-Bayesian \acp{cnn}. One thing to observe is that in initial epochs, Bayesian \acp{cnn} trained by variational inference start with a low validation accuracy compared to architectures trained by frequentist inference. This must deduce from the initialization of the variational posterior probability distributions $q_{\theta}(w|\mathcal{D})$ as uniform distributions, while initial point-estimates in architectures trained by frequentist inference are randomly drawn from a standard Gaussian distribution. (For uniformity, we changed the initialization of frequentist architecures from Xavier initialization to standard Gaussian). The latter initialization method ensures the initialized weights are neither too small nor too large. In other words, the motivation of the latter initialization is to start with weights such that the activation functions do not let them begin in saturated or dead regions. This is not true in case of uniform distributions and hence, Bayesian \acp{cnn}' starting validation accuracies can be comparably low.
+
+\pagebreak
 \newline Figure \ref{fig:std_CNN} displays the convergence of the standard deviation $\sigma$ of the variational posterior probability distribution $q_{\theta}(w|\mathcal{D})$ of a random model parameter over epochs. As aforementioned, all prior probability distributions $p(w)$ are initialized as uniform distributions. The variational posterior probability distributions $q_{\theta}(w|\mathcal{D})$ are approximated as Gaussian distributions which become more confident as more data is processed - observable by the decreasing standard deviation over epochs in Figure \ref{fig:std_CNN}. Although the validation accuracy for MNIST on Bayesian LeNet-5 has already reached 99\%, we can still see a fairly steep decrease in the parameter's standard deviation. In Figure \ref{fig:distribution}, we plot the actual Gaussian variational posterior probability distributions $q_{\theta}(w|\mathcal{D})$ of a random parameter of LeNet-5 trained on CIFAR-10 at some epochs.
 %
-\begin{figure}[b!] 
+\begin{figure}[H] 
 \begin{center}
 \includegraphics[width=\linewidth]{Chapter5/Figs/std_CNN.png}
 \caption{Convergence of the standard deviation of the Gaussian variational posterior probability distribution $q_{\theta}(w|\mathcal{D})$ of a random model parameter at epochs 1, 5, 20, 50, and 100. MNIST is trained on Bayesian LeNet-5.}
@@ -165,14 +170,64 @@ First, we evaluate the performance of our proposed method, Bayesian \acp{cnn} wi
 \end{center}
 \end{figure} 
 %
-\begin{figure}[t!] 
+
+\begin{figure}[H] 
 \begin{center}
 \includegraphics[width=\linewidth]{Chapter5/Figs/distribution.png}
 \caption{Convergence of the Gaussian variational posterior probability distribution $q_{\theta}(w|\mathcal{D})$ of a random model parameter at epochs 1, 5, 20, 50, and 100. CIFAR-10 is trained on Bayesian LeNet-5.}
 \label{fig:distribution}
 \end{center}
 \end{figure} 
-%
+
+\newline Figure \ref{fig:distribution} displays the convergence of the Gaussian variational probability distribution of a weight taken randomly from the first layer of LeNet-5 architecuture. The architecture is trained on CIFAR-10 with a 
+
+
+
+\section{Case Study 2: Large Dataset (CIFAR-100)}
+\subsection{Dataset}
+
+\subsubsection{CIFAR-100}
+This dataset is similar to the CIFAR-10, and is a labeled subset of the 80 million tiny images dataset \cite{Torralba:2008:MTI:1444381.1444403}. The dataset has 100 classes containing 600 images each. There are 500 training images and 100 validation images per class. The images are colored with a resolution of 32 by 32 pixels.
+
+\subsection{Results}
+
+\begin{table}[H]
+\tiny
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \resizebox{\linewidth}{!}{
+    \begin{tabular}{ l  c  c  } 
+     \hline
+      \empty & CIFAR-100  \\ [0.75ex]
+     \hline
+     Bayesian AlexNet (with VI)  & 36  \\
+     
+     Frequentist AlexNet & 38  \\
+
+     Bayesian LeNet-5 (with VI) &  31  \\
+     
+     Frequentist LeNet-5  & 33  \\
+     \hline \\
+    \end{tabular}}
+    \renewcommand{\arraystretch}{1.5}
+    \caption{Comparison of validation accuracies (in percentage) for different architectures with variational inference (VI), frequentist inference and Dropout as a Bayesian approximation as proposed by Gal and Ghahramani \cite{gal2015bayesian} for MNIST, CIFAR-10, and CIFAR-100.}
+    \label{tab:resultsCIFAR-100}
+\end{table}
+
+
+
+In Figure \ref{fig:regularization}, we show how Bayesian networks incorporate naturally effects of regularization, exemplified on AlexNet. While an AlexNet trained by frequentist inference without any regularization overfits greatly on CIFAR-100, an AlexNet trained by Bayesian inference on CIFAR-100 does not. It performs equivalently to an AlexNet trained by frequentist inference with three layers of Dropout after the first, fourth, and sixth layers in the architecture.
+
+\begin{figure}[H] 
+\begin{center}
+\includegraphics[width=\linewidth]{Chapter5/Figs/results_regularization.png}
+\caption{Comparison of Training and Validation Accuracies of Bayesian AlexNet and LeNet-5 with frequentist approach with and without dropouts on CIFAR-100 datasets}
+\label{fig:regularization}
+\end{center}
+\end{figure} 
+
+\section{Uncertainity estimation}
+
 \newline Finally, Table \ref{tab:uncertainty} compares the means of aleatoric and epistemic uncertainties for a Bayesian LeNet-5 with variational inference on MNIST and CIFAR-10. The aleatoric uncertainty of CIFAR-10 is about twenty times as large as that of MNIST. Considering that the aleatoric uncertainty measures the irreducible variability and depends on the predicted values, a larger aleatoric uncertainty for CIFAR-10 can be directly deduced from its lower validation accuracy and may be further due to the smaller number of training examples. The epistemic uncertainty of CIFAR-10 is about fifteen times larger than that of MNIST, which we anticipated, since epistemic uncertainty decreases proportional to validation accuracy. 
 \begin{table}[t!]
 \tiny
@@ -192,16 +247,7 @@ First, we evaluate the performance of our proposed method, Bayesian \acp{cnn} wi
     \caption{Aleatoric and epistemic uncertainty for Bayesian LeNet-5 calculated for MNIST and CIFAR-10, computed as proposed by Kwon et al. \cite{kwon2018uncertainty}.}
     \label{tab:uncertainty}
 \end{table}
-%
-\section{Case Study 2: Large Dataset (CIFAR-100)}
-\subsection{Dataset}
 
-\subsubsection{CIFAR-100}
-This dataset is similar to the CIFAR-10, and is a labeled subset of the 80 million tiny images dataset \cite{Torralba:2008:MTI:1444381.1444403}. The dataset has 100 classes containing 600 images each. There are 500 training images and 100 validation images per class. The images are colored with a resolution of 32 by 32 pixels.
-
-\subsection{Results}
-
-\section{Uncertainity estimation}
 \section{Model Pruning}
 
 \ifpdf
