@@ -250,6 +250,66 @@ In Figure \ref{fig:regularization}, we show how Bayesian networks incorporate na
 
 \section{Model Pruning}
 
+\subsubsection{Halving the Parameters number}
+
+For every parameter for a frequentist inference network, Bayesian \acp{cnn} has two parameters ($\mu$, $\sigma$). Halving the number of parameters of Bayesian AlexNet ensures the number of parameters of it are comparable with a frequentist inference network. The number of filtres of ALexNet are halved and a new architecture called AlexNetHalf is defined in Figure \ref{tab:AlexNetHalfArchitecture}. 
+
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{2}
+    \begin{tabular}{c c c c c c} 
+ \hline
+ layer type & width & stride & padding & input shape & nonlinearity \\ [0.5ex] 
+ \hline
+ convolution ($11\times11$) & 32 & 4 & 5 & $M\times3\times32\times32$ & Softplus \\ 
+ 
+ max-pooling ($2\times2$) & \empty & 2 & 0 & $M\times32\times32\times32$ & \empty \\
+ 
+ convolution ($5\times5$) & 96 & 1 & 2 & $M\times32\times15\times15$ & Softplus \\
+ 
+ max-pooling ($2\times2$) & \empty & 2 & 0 & $M\times96\times15\times15$ & \empty \\
+ 
+ convolution ($3\times3$) & 192 & 1 & 1 & $M\times96\times7\times7$ & Softplus \\
+ 
+ convolution ($3\times3$) & 128 & 1 & 1 & $M\times192\times7\times7$ & Softplus \\
+ 
+ convolution ($3\times3$) & 64 & 1 & 1 & $M\times128\times7\times7$ & Softplus \\
+ 
+ max-pooling ($2\times2$) & \empty & 2 & 0 & $M\times64\times7\times7$ & \empty \\
+ 
+ fully-connected & 64 & \empty & \empty & $M\times64$ & \empty \\ [1ex] 
+ \hline
+\end{tabular}
+\renewcommand{\arraystretch}{1.5}
+\label{tab:AlexNetHalfArchitecture}
+\caption{AlexNetHalf with number of filters halved compared to the original architecture.}
+\end{table}
+
+
+The AlexNetHalf architecture was trained and validated on the MNIST and CIFAR10 dataset and the results are shown in Table \ref{tab:resultsAlexNetHalf}. The accuracy of pruned AlexNet with only half the number of filters compared to the normal architecture shows an accuracy gain of 6 percent in case of CIFAR10 and equivalent performance for MNIST dataset. Lesser filters learn the most important features which proved better at inter-class classification is one of the explaination for it. Upon visualization of the filters, no distinct clearification can be made to prove the previous statement.  
+
+\begin{table}[H]
+\tiny
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \resizebox{\linewidth}{!}{
+    \begin{tabular}{ l  c  c  c  c } 
+     \hline
+      \empty & MNIST & CIFAR-10   \\ [0.75ex]
+     \hline
+     Bayesian AlexNet (with VI) & 99 & 73   \\
+     
+     Frequentist AlexNet & 99 & 73   \\
+     
+     Bayesian AlexNetHalf (with VI) & 99 & 79  \\
+     
+     \hline \\
+    \end{tabular}}
+    \renewcommand{\arraystretch}{1.5}
+    \caption{Comparison of validation accuracies (in percentage) for AlexNet with variational inference (VI), AlexNet with frequentist inference and AlexNet with half number of filters halved for MNIST, and CIFAR-10.}
+    \label{tab:resultsAlexNetHalf}
+\end{table}
+
 \ifpdf
     \graphicspath{{Chapter2/Figs/Raster/}{Chapter2/Figs/PDF/}{Chapter2/Figs/}}
 \else
