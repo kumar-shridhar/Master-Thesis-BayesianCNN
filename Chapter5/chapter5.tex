@@ -287,7 +287,7 @@ For every parameter for a frequentist inference network, Bayesian \acp{cnn} has 
 
 
 The AlexNetHalf architecture was trained and validated on the MNIST and CIFAR10 dataset and the results are shown in Table \ref{tab:resultsAlexNetHalf}. The accuracy of pruned AlexNet with only half the number of filters compared to the normal architecture shows an accuracy gain of 6 percent in case of CIFAR10 and equivalent performance for MNIST dataset. Lesser filters learn the most important features which proved better at inter-class classification is one of the explaination for it. Upon visualization of the filters, no distinct clearification can be made to prove the previous statement.  
-Another possible explaination could be the model is fitting perfectly after reducing the number of filters ensuring the model is not overfitting and validation accuracy is comparitively higher. 
+Another possible explaination could be the model is fitting perfectly after reducing the number of filters ensuring the model is not overfitting and validation accuracy is comparitively higher. CIFAR-100 higher validation accuracy on ALexNetHalf and a lower training accuracy than Bayesian AlexNet proves the theory. Using lesser number of filters further enhances the regularization effect and makes the model more robust against overfitting. 
 
 \begin{table}[H]
 \tiny
@@ -296,18 +296,18 @@ Another possible explaination could be the model is fitting perfectly after redu
     \resizebox{\linewidth}{!}{
     \begin{tabular}{ l  c  c  c  c } 
      \hline
-      \empty & MNIST & CIFAR-10   \\ [0.75ex]
+      \empty & MNIST & CIFAR-10 & CIFAR-100 \\ [0.75ex]
      \hline
-     Bayesian AlexNet (with VI) & 99 & 73   \\
+     Bayesian AlexNet (with VI) & 99 & 73 & 36 \\
      
-     Frequentist AlexNet & 99 & 73   \\
+     Frequentist AlexNet & 99 & 73 & 38  \\
      
-     Bayesian AlexNetHalf (with VI) & 99 & 79  \\
+     Bayesian AlexNetHalf (with VI) & 99 & 79 & 38 \\
      
      \hline \\
     \end{tabular}}
     \renewcommand{\arraystretch}{1.5}
-    \caption{Comparison of validation accuracies (in percentage) for AlexNet with variational inference (VI), AlexNet with frequentist inference and AlexNet with half number of filters halved for MNIST, and CIFAR-10.}
+    \caption{Comparison of validation accuracies (in percentage) for AlexNet with variational inference (VI), AlexNet with frequentist inference and AlexNet with half number of filters halved for MNIST, CIFAR-10 and CIFAR-100 datasets.}
     \label{tab:resultsAlexNetHalf}
 \end{table}
 
