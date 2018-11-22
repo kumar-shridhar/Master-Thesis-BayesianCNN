@@ -287,6 +287,7 @@ For every parameter for a frequentist inference network, Bayesian \acp{cnn} has 
 
 
 The AlexNetHalf architecture was trained and validated on the MNIST and CIFAR10 dataset and the results are shown in Table \ref{tab:resultsAlexNetHalf}. The accuracy of pruned AlexNet with only half the number of filters compared to the normal architecture shows an accuracy gain of 6 percent in case of CIFAR10 and equivalent performance for MNIST dataset. Lesser filters learn the most important features which proved better at inter-class classification is one of the explaination for it. Upon visualization of the filters, no distinct clearification can be made to prove the previous statement.  
+Another possible explaination could be the model is fitting perfectly after reducing the number of filters ensuring the model is not overfitting and validation accuracy is comparitively higher. 
 
 \begin{table}[H]
 \tiny
