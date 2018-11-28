@@ -25,14 +25,14 @@ Various regularization techniques for controlling over-fitting are used in pract
 
 \section{Problem Statement}
 
-Despite Neural Networks architectures achieving state-of-the-art results in almost all classification tasks, Neural Networks still make over-confident decisions. An uncertainty measure is missing from the current Neural Networks architectures. Also, very careful training, weight control measures like regularization of weights is needed to make the models susceptible to over-fitting issues. 
+Despite Neural Networks architectures achieving state-of-the-art results in almost all classification tasks, Neural Networks still make over-confident decisions. A measure of uncertainty in the prediction is missing from the current Neural Networks architectures. Very careful training, weight control measures like regularization of weights and similar techniques are needed to make the models susceptible to over-fitting issues. 
 
 We address both of these concerns by introducing Bayesian learning to a Convolutional Neural Networks that adds a measure for uncertainty and regularization in their predictions. 
 
 \section{Current Situation}
 
 Deep Neural Networks have been successfully applied to many domains, including sensitive domains like health-care, security, fraudulent transactions and many more. However, from a probability theory perspective, it is unjustifiable to use single point-estimates as weights to base any classification on.
-On the other hand, Bayesian neural networks (NNs) are more robust to over-fittings, and can easily learn from small datasets. Bayesian approach further offers uncertainty estimates via its parameters in form of probability distributions (see Figure \ref{fig:Scalar_Bayesian_Distribution}). At the same time, by using a prior probability distribution to integrate out the parameters, we compute the average across many models during training, which gives a regularization effect to the network, thus preventing overfitting.
+On the other hand, Bayesian neural networks (NNs) are more robust to over-fittings, and can easily learn from small datasets. Bayesian approach further offers uncertainty estimates via its parameters in form of probability distributions (see Figure \ref{fig:Scalar_Bayesian_Distribution}). At the same time, by using a prior probability distribution to integrate out the parameters, the average is computed across many models during training, which gives a regularization effect to the network, thus preventing overfitting.
 
 
 Bayesian posterior inference over the neural network parameters is a theoretically attractive method for controlling overfitting; however, modelling a distribution over the kernels (also known as filters) of a \acp{cnn} has never been attempted successfully before, perhaps because of the vast number of parameters and extremely large models commonly used in practical applications.
@@ -62,7 +62,7 @@ But the variational approach used to approximate the posterior in Bayesian NNs c
     \item We empirically show that our proposed generic and reliable variational inference method for Bayesian \acp{cnn} can be applied to various \ac{cnn} architectures without any limitations on their performances. 
     \item We examine how to estimate the aleatoric and epistemic uncertainties and empirically show how the uncertainty can decrease, allowing the decisions made by the network to become more deterministic as the training accuracy increases. 
     \item We also empirically show how our method typically only doubles the number of parameters yet trains an infinite ensemble using unbiased Monte Carlo estimates of the gradients. 
-    \item We also apply L1 norm to reduce the trained parameters and perform model pruning to reduce the number of parameters still achieving comparable to better accuracy. 
+    \item We also apply L1 norm to reduce the trained parameters and perform model pruning to reduce the number of model parameters without a reduction in the model prediction accuracy. 
 \end{enumerate} 
 This work builds on the foundations laid out by Blundell et al. \cite{blundell2015weight}, who introduced \textit{Bayes by Backprop} for feedforward neural networks. Together with the extension to recurrent neural networks, introduced by Fortunato et al. \cite{fortunato2017bayesian}, \textit{Bayes by Backprop} is now applicable on the three most frequently used types of neural networks, i.e., feedforward, recurrent, and convolutional neural networks.
 
