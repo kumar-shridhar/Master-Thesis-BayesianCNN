@@ -32,6 +32,22 @@ Applying Bayesian methods to neural networks has been studied in the past with v
 \newline Several authors have claimed that Dropout \cite{srivastava2014dropout} and Gaussian Dropout \cite{wang2013fast} can be viewed as approximate variational inference schemes \cite{gal2015bayesian, kingma2015variational}. We compare our results to Gal's \& Ghahramani's \cite{gal2015bayesian} and discuss the methodological differences in detail.
 
 
+Several approaches have been proposed for Bayesian learning
+of neural networks, based on, e.g., the Laplace approximation \cite{Mackay1991APB}, Hamiltonian Monte Carlo (Neal,
+1995), expectation propagation (Jylanki et al., 2014) \cite{Jylanki:2014:EPN:2627435.2638593}, and ¨
+variational inference (Hinton & Camp, 1993) \cite{hinton1993keeping}. However,
+these approaches have not seen widespread adoption due
+to their lack of scalability in both network architecture
+and data size. A notable exception is the scalable variational
+inference approach of Graves (2011) \cite{graves2011practical}. However, this method seems to perform poorly in practice due to noise
+from Monte Carlo approximations within the stochastic
+gradient computations. A different scalable solution based
+on expectation propagation was proposed by Soudry et al.
+(2014) \cite{Soudry}. While this method works for networks with binary
+weights, its extension to continuous weights is unsatisfying
+as it does not produce estimates of posterior variance.
+
+
 
 \begin{table}
 \caption{Even better looking table using booktabs}
