@@ -221,7 +221,21 @@ Uncertainities in a network is a measure of how certain the model is with it's p
 
 \textit{Aleatoric} uncertainty measures the noise inherent in the observations. This type of uncertainity is present in the data collection method like the sensor noise or motion noise which is uniform along the dataset. This cannot be reducced if more data is collected. \textit{Epistemic} uncertainty on the other hand, represents the uncertainty in the model. This uncertainity can be reduced given more data and is often referred to as \textit{model uncertainty}.  Aleatoric uncertainty can further be categorized into \textit{homoscedastic} uncertainty, uncertainty which stays constant for different inputs, and \textit{heteroscedastic} uncertainty. Heteroscedastic uncertainty depends on the inputs to the model, with some inputs potentially having more noisy outputs than others. Heteroscedastic uncertainty is in particular important so that model prevents from outputing very confident decisions.
 
-Existing uncertainties are formalised as probability distributions over either the model parameters, or model outputs, respectively. Epistemic uncertainty is modeled by placing a prior distribution over a model's weights, and then trying to capture how much these weights vary given some data. Aleatoric uncertainty on the other hand is modeled by placing a distribution over the output of the model.
+Existing uncertainties are calculated by placing a probability distributions over either the model parameters, or model outputs. Epistemic uncertainty is modeled by placing a prior distribution over a model's weights, and then trying to capture how much these weights vary given some data. Aleatoric uncertainty on the other hand is modeled by placing a distribution over the output of the model.
+
+\subsubsection{Sources of Uncertainities}
+
+The following can be the source of uncertainty as mentioned by Kiureghian \cite{Kiureghian}:
+
+\begin{enumerate}
+    \item Uncertainty inherent in the basic random variables $X$, such as the uncertainty inherent in material property constants and load values, which can be directly measured.
+    \item Uncertain model error resulting from selection of the form of the probabilistic sub-model $f_{X}(x,H_{f})$ used to describe the distribution of basic variables.
+    \item  Uncertain modeling errors resulting from selection of the physical sub-models $g_{i}(x,H_{g}), i = 1,2,...,m,$ used to describe the derived variables.
+    \item  Statistical uncertainty in the estimation of the parameters $H_f$ of the probabilistic sub-model.
+    \item  Statistical uncertainty in the estimation of the parameters $H_g$ of the physical sub-models.
+    \item  Uncertain errors involved in measuring of observations, based on which the parameters $H_f$ and $H_g$  are estimated. These include errors involved in indirect measurement, e.g., the measurement of a quantity through a proxy, as in non-destructive testing of material strength.
+    \item Uncertainty modeled by the random variables $Y$ corresponding to the derived variables $y$, which may include, in addition to all the above uncertainties, uncertain errors resulting from computational errors, numerical approximations or truncations. For example, the computation of load effects in a nonlinear structure by a finite element procedure employs iterative calculations, which invariably involve convergence tolerances and truncation errors.
+\end{enumerate} 
 
 \section{Backpropagation}
 
