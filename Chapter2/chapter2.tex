@@ -4,6 +4,36 @@
 %****************************** Second Chapter *********************************
 %*******************************************************************************
 
+\newcommand{\ba}{\mathbf{a}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bd}{\mathbf{d}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\Exp}[2]{\mathbb{E}_{#1}\left[#2\right]}
+\newcommand{\Var}[2]{\text{Var}_{#1}\left[#2\right]}
+\newcommand{\Cov}[2]{\text{Cov}_{#1}\left[#2\right]}
+\newcommand{\Corr}[2]{\text{Corr}_{#1}\left[#2\right]}
+
+\newcommand{\bA}{\mathbf{A}}
+\newcommand{\bB}{\mathbf{B}}
+\newcommand{\bV}{\mathbf{V}}
+\newcommand{\bW}{\mathbf{W}}
+\newcommand{\bv}{\mathbf{v}}
+
+\newcommand{\bphi}{\mathbf{\phi}}
+\newcommand{\bt}{\mathbf{\theta}}
+\newcommand{\bdelta}{\mathbf{\delta}}
+\newcommand{\beps}{\mathbf{\epsilon}}
+\newcommand{\q}{q_\mathbf{\phi}}
+\newcommand{\bmu}{\mathbf{\mu}}
+\newcommand{\bsigma}{\mathbf{\sigma}}
+\newcommand{\bSigma}{\mathbf{\Sigma}}
+
+\newcommand{\D}{\mathcal{D}}
+
+\newcommand{\eqnr}{\addtocounter{equation}{1}\tag{\theequation}}
+
 \chapter{Background}
 
 \ifpdf
@@ -103,52 +133,86 @@ with respect to the variational parameters defining $q(w)$. This is known as \te
 
 Maximizing the KL divergence between the posterior and the prior over $w$ will result in a variational distribution that learns a well representation from the data (obtained from log likelihood) and is closer to the prior distribution. In other words, it can prevent overfitting. 
 
-\subsection{Dropout as Variational Inference}
-
-Dropout as Variational Inference was explained by \cite{gal2015bayesian} which is further based on \cite{Gal2015Dropout}. The variational inference in Bayesian NNs is approximate using Bernoulli approximating variational distributions.
-
-As before, we are interested in finding the most probable functions that have generated our data. In the Bayesian NN case the functions are defined through the NN weights, and these are our sufficient statistics $\bo = (\W_i)_{i=1}^L$. We are thus interested in the posterior over the weights given our observables $\X, \Y$: $p \big( \bo | \X, \Y \big)$. 
-This posterior is not tractable for a Bayesian NN, and we use variational inference to approximate it. %(similar techniques have been carried out over the years under different names \citep{hinton1993keeping,
-%barber1998ensemble,
-%graves2011practical,
-%blundell2015weight}). 
-
-To relate the approximate inference in our Bayesian NN to dropout training, we define our approximating variational distribution $q(\W_i)$ for every layer $i$ as 
-\begin{align}\label{eq:approx-dist}
-\W_i &= \M_i \cdot \diag([\sBb_{i,j}]_{j=1}^{K_i}) \\
-\sBb_{i,j} &\sim \text{Bernoulli}(p_i) \text{ for } i = 1, ..., L, ~ j = 1, ..., K_{i-1}. \notag
-\end{align}
-Here $\sBb_{i,j}$ are Bernoulli distributed random variables with some probabilities $p_i$, and $\M_i$ are variational parameters to be optimised.
-The $\diag(\cdot)$ operator maps vectors to diagonal matrices whose diagonals are the elements of the vectors. 
-
-The integral in eq.\ \eqref{eq:L:VI} is intractable and cannot be evaluated analytically for our approximating distribution. Instead, we approximate the integral with Monte Carlo integration over $\bo$. This results in an unbiased estimator for $\cL_{VI}$:
-\begin{align}
-\widehat{\cL}_{\text{VI}} := \sum_{i=1}^N E \big( \y_i, \widehat{\f} ( \x_i, \widehat{\bo}_i ) \big) - \KL(q(\bo) || p(\bo)) && \widehat{\bo}_i \sim q(\bo)
-\end{align}
-with $E(\cdot, \cdot)$ being the softmax loss (for a softmax likelihood).
-Note that sampling from $q(\W_i)$ is identical to performing dropout on layer $i$ in a network whose weights are $(\M_i)_{i=1}^L$.
-The binary variable $\sBb_{i,j} = 0$ corresponds to unit $j$ in layer $i-1$ being dropped out as an input to the $i$'th layer. The second term in eq.\ \eqref{eq:L:VI} can be approximated following \citep{Gal2015Dropout}, resulting in the objective eq.\ \eqref{eq:L:dropout}.
-Dropout and Bayesian NNs, in effect, result in the same model parameters that best explain the data.
-
-%In our approximate model $q(\y | \x)$ we have a-priori weight distributions $\N(\bz,\I)$ for every network weight $\W_i$ \citep{Gal2015Dropout}. Our approximate posterior over the weight matrices is $\M_i \diag(\sBb_i)$ with $\sBb_i$ vectors of Bernoulli distributed random variables and variational parameters $\M_i$. 
-%Minimising our optimisation objective in eq.\ \eqref{eq:L:GP-MC-reg} maximises the log likelihood term while minimising the KL divergence term. This KL divergence is between the approximate distribution placed over the weights and the prior distribution over the weights. This encourages the model to explain the data well while keeping it from over-fitting.
-%The two terms are obtained using a Monte Carlo approximation of the integral over the variational distribution $q(\bo)$. 
-Predictions in this model follow equation \eqref{eq:predictive} replacing the posterior $p \big( \bo| \X, \Y \big)$ with the approximate posterior $q \big( \bo \big)$. We can approximate the integral with Monte Carlo integration:
-\begin{align} \label{eq:approx_predictive}
-p(y^* | \x^*, \X, \Y) \approx 
-\int p \big( y^* | \x^*, \bo \big) q \big( \bo \big) 
-\td \bo
-\approx \frac{1}{T} \sum_{t=1}^T p ( y^* | \x^*, \widehat{\bo}_t )
-\end{align}
-with $\widehat{\bo}_t \sim q \big( \bo \big)$. This is referred to as MC dropout.
 
 \subsection{Local  reparametrisation  trick}
 
-We utilise the local reparameterization trick \cite{kingma2015variational} and apply it to \acp{cnn}. Following \cite{kingma2015variational,neklyudov2018variance}, we do not sample the weights $w$, but we sample instead layer activations $b$ due to its consequent computational acceleration. The variational posterior probability distribution $q_{\theta}(w_{ijhw}|\mathcal{D})=\mathcal{N}(\mu_{ijhw},\alpha_{ijhw}\mu^2_{ijhw})$ (where $i$ and $j$ are the input, respectively output layers, $h$ and $w$ the height, respectively width of any given filter) allows to implement the local reparamerization trick in convolutional layers. This results in the subsequent equation for convolutional layer activations $b$:
-\begin{equation}
-    b_j=A_i\ast \mu_i+\epsilon_j\odot \sqrt{A^2_i\ast (\alpha_i\odot \mu^2_i)}
-\end{equation}
-where $\epsilon_j \sim \mathcal{N}(0,1)$, $A_i$ is the receptive field, $\ast$ signalises the convolutional operation, and $\odot$ the component-wise multiplication.
+We therefore propose an alternative estimator for which we have $\Cov{}{L_{i},L_{j}} = 0$, so that the variance of our stochastic gradients scales as $1/M$. We then make this new estimator computationally efficient by not sampling $\beps$ directly, but only sampling the intermediate variables $f(\beps)$ through which $\beps$ influences $L_\D^\text{SGVB}(\bphi)$. By doing so, the global uncertainty in the weights is translated into a form of local uncertainty that is independent across examples and easier to sample. We refer to such a reparameterization from global noise to local noise as the \emph{local reparameterization trick}. Whenever a source of global noise can be translated to local noise in the intermediate states of computation ($\beps \rightarrow f(\beps)$), a local reparameterization can be applied to yield a computationally and statistically efficient gradient estimator.
+
+Such local reparameterization applies to a fairly large family of models, but is best explained through a simple example: Consider a standard fully connected neural network containing a hidden layer consisting of 1000 neurons. This layer receives an $M \times 1000$ input feature matrix $\bA$ from the layer below, which is multiplied by a $1000 \times 1000$ weight matrix $\bW$, before a nonlinearity is applied, i.e. $\bB = \bA\bW$. We then specify the posterior approximation on the weights to be a fully factorized Gaussian, i.e.\ $\q(w_{i,j}) = N(\mu_{i,j},\sigma^{2}_{i,j}) \hspace{0.1cm} \forall w_{i,j} \in \bW$, which means the weights are sampled as $w_{i,j} = \mu_{i,j} + \sigma_{i,j}\epsilon_{i,j}$, with $\epsilon_{i,j} \sim N(0,1)$. In this case we could make sure that $\Cov{}{L_{i},L_{j}} = 0$ by sampling a separate weight matrix $\bW$ for each example in the minibatch, but this is not computationally efficient: we would need to sample $M$ million random numbers for just a single layer of the neural network. Even if this could be done efficiently, the computation following this step would become much harder: Where we originally performed a simple matrix-matrix product of the form $\bB = \bA\bW$, this now turns into $M$ separate local vector-matrix products. The theoretical complexity of this computation is higher, but, more importantly, such a computation can usually not be performed in parallel using fast device-optimized BLAS (Basic Linear Algebra Subprograms). This also happens with other neural network architectures such as convolutional neural networks, where optimized libraries for convolution cannot deal with separate filter matrices per example.
+
+Fortunately, the weights (and therefore $\beps$) only influence the expected log likelihood through the neuron activations $\bB$, which are of much lower dimension. If we can therefore sample the random activations $\bB$ directly, without sampling $\bW$ or $\beps$, we may obtain an efficient Monte Carlo estimator at a much lower cost. For a factorized Gaussian posterior on the weights, the posterior for the activations (conditional on the input $\bA$) is also factorized Gaussian:
+\begin{align}
+\q(w_{i,j}) &= N(\mu_{i,j},\sigma^{2}_{i,j}) \hspace{0.1cm} \forall w_{i,j} \in \bW \hspace{0.2cm} \Longrightarrow \hspace{0.2cm} \q(b_{m,j}|\bA) = N(\gamma_{m,j},\delta_{m,j}), \text{ with } \nonumber\\
+\gamma_{m,j} &= \sum_{i=1}^{1000} a_{m,i}\mu_{i,j}, \hspace{0.2cm} \text{ and } \hspace{0.2cm} \delta_{m,j} = \sum_{i=1}^{1000} a^{2}_{m,i}\sigma^{2}_{i,j}.
+\end{align}
+Rather than sampling the Gaussian weights and then computing the resulting activations, we may thus sample the activations from their implied Gaussian distribution directly, using $b_{m,j} = \gamma_{m,j} + \sqrt{\delta_{m,j}}\zeta_{m,j}$, with $\zeta_{m,j} \sim N(0,1)$. Here, $\zeta$ is an $M \times 1000$ matrix, so we only need to sample $M$ thousand random variables instead of $M$ million: a thousand fold savings.
+
+In addition to yielding a gradient estimator that is more \textit{computationally efficient} than drawing separate weight matrices for each training example, the local reparameterization trick also leads to an estimator that has \textit{lower variance}. To see why, consider the stochastic gradient estimate with respect to the posterior parameter $\sigma^{2}_{i,j}$ for a minibatch of size $M=1$. Drawing random weights $\bW$, we get
+\begin{align}
+\label{eq:stochest_weights}
+\frac{\partial L_\D^\text{SGVB}}{\partial \sigma^{2}_{i,j}} = \frac{\partial L_\D^\text{SGVB}}{\partial b_{m,j}}\frac{\epsilon_{i,j}a_{m,i}}{2\sigma_{i,j}}.
+\end{align}
+If, on the other hand, we form the same gradient using the local reparameterization trick, we get
+\begin{align}
+\label{eq:stochest_local}
+\frac{\partial L_\D^\text{SGVB}}{\partial \sigma^{2}_{i,j}} = \frac{\partial L_\D^\text{SGVB}}{\partial b_{m,j}}\frac{\zeta_{m,j}a_{m,i}^{2}}{2\sqrt{\delta_{m,j}}}.
+\end{align}
+Here, there are two stochastic terms: The first is the backpropagated gradient $\partial L_{\D}^\text{SGVB} / \partial b_{m,j}$, and the second is the sampled random noise ($\epsilon_{i,j}$ or $\zeta_{m,j}$). Estimating the gradient with respect to $\sigma^{2}_{i,j}$ then basically comes down to estimating the covariance between these two terms. This is much easier to do for $\zeta_{m,j}$ as there are much fewer of these: individually they have higher correlation with the backpropagated gradient $\partial L_\D^\text{SGVB}/\partial b_{m,j}$, so the covariance is easier to estimate. In other words, measuring the effect of $\zeta_{m,j}$ on $\partial L_\D^\text{SGVB}/\partial b_{m,j}$ is easy as $\zeta_{m,j}$ is the only random variable directly influencing this gradient via $b_{m,j}$. On the other hand, when sampling random weights, there are a thousand $\epsilon_{i,j}$ influencing each gradient term, so their individual effects get lost in the noise. In appendix \ref{sec:low_variance_reparam} we make this argument more rigorous, and in section~\ref{sec:experiments} we show that it holds experimentally.
+
+
+%The problem of approximating the gradient thus boils down to estimating one of the correlation coefficients $\rho_{1} = \Corr{q,\D}{\partial L_\D^\text{SGVB}/\partial b_{m,j}, \epsilon_{i,j}}$ or $\rho_{2} = \Corr{q,\D}{\partial L_\D^\text{SGVB}/\partial b_{m,j}, \zeta_{m,j}}$. As is well known, accurately estimating a correlation coefficient is easier if the absolute correlation is large: in general the standard error for the sample correlation coefficient is given by
+%\[
+%\text{SE}{\rho} = \frac{1 - \rho^{2}}{\sqrt{M - 1}}.
+%\]
+%Since there are a thousand times fewer $\zeta_{m,j}$ than $\epsilon_{i,j}$, individually they have much higher correlation with the gradient $\partial L_\D^\text{SGVB}/\partial b_{m,j}}$, so they are much easier to estimate. In other words, measuring the effect of $\zeta_{m,j}$ on $\partial L_\D^\text{SGVB}/\partial b_{m,j}}$ is easy as $\zeta_{m,j}$ is the only random variable influencing $b_{m,j}$. On the other hand, when sampling random weights, there are a thousand $\epsilon_{i,j}$ influencing each $b_{m,j}$, so their individual effects get lost in the noise.
+
+
+
+%Trivial parallelizability can be retained by translating weight uncertainty in $\q(\bw)$ into local uncertainty in the intermediate states of computation. We call this the \emph{local reparameterisation trick}. Let $\bb^i = f(\ba^i, \bw^i)$ be an intermediate variable of computation for datapoint $i$, with $\ba^i$ a previous state of computation (typically a function of the model input $\bx^i$) and $\bw^i$ the model parameters with distribution $\bw^i \sim \q(\bw)$ that is equal for all $i$. Let $L(\bb^i)$ be (part of) an objective, such as a log-likelihood function, whose expectation w.r.t. $\q(\bw)$ we would like to estimate (equations ~\eqref{eq:bound} and \eqref{eq:objective_sgvb}). Given the distribution $\q(\bw)$, we equivalently have some distribution over $\bb^i$, namely $\q(\bb^i|\ba^i)$. The trick is to parameterize $\bb^i \sim \q(\bb^i|\ba^i)$ as a differentiable function $\bb^i = g^\text{VD}(\beps^i, \ba^i, \bphi)$ with random noise $\beps^i \sim p^\text{VD}(\beps)$, such that:
+%\begin{align}
+%\Exp{\q(\bw)}{L(f(\ba^i, \bw^i))}
+%&= \Exp{\q(\bb^i|\ba^i)}{L(\bb^i)}
+%= \Exp{p^\text{VD}(\beps)}{L(g^\text{VD}(\beps^i,\ba^i,\bphi))}
+%\end{align}
+%The distribution of the original SGVB parameterisation $\bb^i = f(\ba^i, f(\beps^i, \bphi))$ with $\beps^i \sim p(\beps)$, equals the distribution of the new parameterisation $\bb^i = g^\text{VD}(\beps^i, \ba^i, \bphi)$ with $\beps^i \sim p^\text{VD}(\beps)$. The key difference is that computation of $g^\text{VD}(\beps^i, \ba^i, \bphi)$ can often be trivially parallelized, whereas $f(\ba^i, f(\beps^i, \bphi))$ cannot. The resulting operations can be combined into a \emph{variational dropout} (VD) estimator
+%\begin{align}
+%L_\D(\bphi) \simeq L_\D^\text{VD}(\bphi)
+%\label{eq:objective_fsgvb}
+%\end{align}
+%that is generally much more efficient than $L_\D^\text{SGVB}(\bphi)$ with minibatches.
+
+
+%\subsection{Fast SGVB through Reparameterization with Local Noise[todo: improve clarity]}\label{sec:fastsgvb}
+%
+%There is a \emph{de facto} standard strategy for efficiently optimizing objective functions with minibatches of data: vectorize the steps of operations such that the bulk of computation is performed in a small number of large operations, such as large matrix-matrix operations or convolutional operations. Using device-optimized BLAS (Basic Linear Algebra Subprograms) libraries, these few large operations can be automatically and efficiently parallelized across multiple CPU or GPU cores. This strategy is at the heart of efficient implementations in software like Matlab, Theano~\cite{bastien2012theano} and Torch~\cite{collobert2011torch7}, and typically leads to orders of magnitude faster computation than non-vectorized implementations.
+%
+%A property of $L_\D^\text{SGVB}$ is that the stochasticity is global: weights are sampled from $\q$ only once, then used across all datapoints in the minibatch. This is sub-optimal in terms of variance. A better estimator is one where the noise is independent per datapoint: the variance of the estimator is then inversely proportional to the minibatch size $M$. A first na\"ive attempt is:
+%$L_\D^{\text{Na\"ive}}(\bphi) = \frac{N}{M} \sum_{i=1}^M \log p(\by^i|\bx^i,\bw^i)$
+%with an explicit separate sample $\bw^i \sim \q(\bw)$ for each individual datapoint $i$ in the minibatch, using a parameterization $\bw^i = f(\beps^i, \bphi)$.
+%however, we then lose the ability to easily parallelize this computation, generally leading to drastically slower computation as explained in the previous paragraph. 
+%
+%[Todo: equation that shows variance reduction effect of separate $\bw^i$ per element in the minibatch.]
+%
+%Trivial parallelizability can be retained by translating weight uncertainty in $\q(\bw)$ into local uncertainty in the intermediate states of computation. We call this the \emph{local reparameterisation trick}. Let $\bb^i = f(\ba^i, \bw^i)$ be an intermediate variable of computation for datapoint $i$, with $\ba^i$ a previous state of computation (typically a function of the model input $\bx^i$) and $\bw^i$ the model parameters with distribution $\bw^i \sim \q(\bw)$ that is equal for all $i$. Let $L(\bb^i)$ be (part of) an objective, such as a log-likelihood function, whose expectation w.r.t. $\q(\bw)$ we would like to estimate (equations ~\eqref{eq:bound} and \eqref{eq:objective_sgvb}). Given the distribution $\q(\bw)$, we equivalently have some distribution over $\bb^i$, namely $\q(\bb^i|\ba^i)$. The trick is to parameterize $\bb^i \sim \q(\bb^i|\ba^i)$ as a differentiable function $\bb^i = g^\text{local}(\beps^i, \ba^i, \bphi)$ with random noise $\beps^i \sim p^\text{local}(\beps)$, such that:
+%\begin{align}
+%\Exp{\q(\bw)}{L(f(\ba^i, \bw^i))}
+%&= \Exp{\q(\bb^i|\ba^i)}{L(\bb^i)}
+%= \Exp{p^\text{local}(\beps)}{L(g^\text{local}(\beps^i,\ba^i,\bphi))}
+%\end{align}
+%The distribution of the original SGVB parameterisation $\bb^i = f(\ba^i, f(\beps^i, \bphi))$ with $\beps^i \sim p(\beps)$, equals the distribution of the new parameterisation $\bb^i = g^\text{local}(\beps^i, \ba^i, \bphi)$ with $\beps^i \sim p^\text{local}(\beps)$. The key difference is that computation of $g^\text{local}(\beps^i, \ba^i, \bphi)$ can often be trivially parallelized, whereas $f(\ba^i, f(\beps^i, \bphi))$ cannot. The resulting operations can be combined into a \emph{fast SGVB} estimator
+%\begin{align}
+%L_\D(\bphi) \simeq L_\D^\text{F-SGVB}(\bphi)
+%\label{eq:objective_fsgvb}
+%\end{align}
+%that is generally much more efficient than $L_\D^\text{SGVB}(\bphi)$ with minibatches.
+
+%\subsection{Example: Dot Product, Gaussian Weight Uncertainty}
+%Let us give an example of the local reparameterization trick, with the common linear operation $\bb^i = \ba^i \bW$, where the row vector $\ba^i$ is of dimension $1 \times N_A$ and is the result of earlier operations, and $\bb^i$ is of dimension $1 \times N_B$. Let $\bW$ be a parameter matrix, with approximate posterior $\q(\bW) = \prod_{jk}\q(W_{jk})$, with $\q(W_{jk}) = \mathcal{N}(\mu_{jk},\bSigma_{jk})$ where $\bmu$ and $\bSigma$ are variational parameter matrices. With $(\odot, (.)^2, \sqrt{(.)})$ we denote element-wise product, square and square-root.
+%
+%A non-parallelizable parameterisation of $\bb^i$, is: $\bb^i = \ba^i (\bmu+\beps^i \odot \sqrt{\bSigma})$.
+%
+%A trivially parallelizable reparameterisation of $\bb^i$ with local noise $\epsilon^i \sim \mathcal{N}(0,I)$ is: $\bb^i = \ba^i \bmu + \epsilon^i \odot \sqrt{(\ba^i)^2 \bSigma}$. Let $\bB = \bA \bW$, where $\bA$ is a matrix of size $M \times N_A$ with $\ba^i$ as $i$-th row, and $\bB$ is the corresponding result with size $M \times N_B$. The vectorized form is $\bB = \bA \bmu + \epsilon \odot \sqrt{\bA^2 \bSigma}$. In this form, most of the computation is contained in a few large matrix-matrix operations, whose computation is trivially parallelized.
+
 
 \section{Weight Uncertainities}
 \subsection{Bayesian Uncertainities}
@@ -167,6 +231,20 @@ Heteroscedastic uncertainty is especially important for computer vision applicat
 Existing approaches to Bayesian deep learning capture either epistemic uncertainty alone, or aleatoric uncertainty alone \cite{gal2016thesis}. These uncertainties are formalised as probability distributions over either the model parameters, or model outputs, respectively. Epistemic uncertainty is modeled by placing a prior distribution over a model's weights, and then trying to capture how much these weights vary given some data. Aleatoric uncertainty on the other hand is modeled by placing a distribution over the output of the model. For example, in regression our outputs might be modeled as corrupted with Gaussian random noise. In this case we are interested in learning the noise's variance as a function of different inputs (such noise can also be modeled with a constant value for all data points, but this is of less practical interest). These uncertainties, in the context of Bayesian deep learning, are explained in more detail in this section. 
 
 \section{Backpropagation}
+
+Backpropagation in an Neural Networks was proposed by Rumelhart \cite{Rumelhart} in 1986 and it is the most commonly used method for training neural networks. Backpropagation is a techniue to compute the gradient of the loss in terms of the network weights. It operates in two phase: firstly, the input features through the network propagates in the forward direction to compute the function output and thereby the loss associated with the parameters. Secondly, the derivatives of the training loss with respect to the weights
+are propagated back from the output layer towards the input layers.
+These computed derivatives are further used to update the weights of the network. This is a continuous process and updation of the weight occurs continuously over every iterations. 
+
+Despite the popularity of backpropagation, there are many hyperparameters in back propagation based stochastic optimization
+that require specific tuning, e.g., learning rate, momentum,
+weight decay, etc. Time reuired for finding the optimal values is proportional to the data size. For a network traisned with backpropagation, only point estimates of the weights is achieved in the network. As a result, these networks make over confident predictions  and do not account for uncertainty in the parameters. Lack of uncertainity measure makes the network prone to overfitting and a need for regularization.
+
+A Bayesian approach to Neural Networks provides the shortcomings with the backpropagation approach \cite{mackay1996hyperparameters} as Bayesian methods naturally account for uncertainty in parameter estimates and can propagate this uncertainty into predictions.
+Also, averaging over parameter values instead of just choosing single point estimates makes the model robust to overfitting. 
+
+Sevreal approaches has been proposed in the past for learning in Bayesian Networks: Laplace approximation \cite{Mackay1991APB}, MC Dropout \cite{gal2015bayesian},and Variational Inference \cite{hinton1993keeping} \cite{graves2011practical} \cite{blundell2015weight}. We used Bayes by Backprop \cite{blundell2015weight} for our work and is explained next.
+
 \subsection{Bayes by Backprop}
 \textit{Bayes by Backprop} \cite{graves2011practical, blundell2015weight} is a variational inference method to learn the posterior distribution on the weights $w \sim q_{\theta}(w|\mathcal{D})$ of a neural network from which weights $w$ can be sampled in backpropagation. 
 It regularises the weights by minimising a compression cost, known as the variational free energy or the expected lower bound on the marginal likelihood.
