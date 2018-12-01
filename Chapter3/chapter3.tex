@@ -32,26 +32,41 @@
 \subsection{Bayesian training}
 Applying Bayesian methods to neural networks has been studied in the past with various approximation methods for the intractable true posterior probability distribution $p(w|\mathcal{D})$. Buntine and Weigend \cite{buntine1991bayesian} started to propose various \textit{maximum-a-posteriori} (MAP) schemes for neural networks. They were also the first who suggested second order derivatives in the prior probability distribution $p(w)$ to encourage smoothness of the resulting approximate posterior probability distribution.
 In subsequent work by Hinton and Van Camp \cite{hinton1993keeping}, the first variational methods were proposed which naturally served as a regularizer in neural networks. He also mentioned that the amount of information in a weight can be controlled by adding Gaussian noise. When optimizing the trade off between the expected error and the information in the weights, the noise level can be adapted during learning.
-Hochreiter and Schmidhuber \cite{hochreiter1995simplifying} suggest taking an information theory perspective into account and utilising a minimum description length (MDL) loss. This penalises non-robust weights by means of an approximate penalty based upon perturbations of the weights on the outputs.
+
+
+Hochreiter and Schmidhuber \cite{hochreiter1995simplifying} suggested taking an information theory perspective into account and utilising a minimum description length (MDL) loss. This penalises non-robust weights by means of an approximate penalty based upon perturbations of the weights on the outputs.
 Denker and LeCun \cite{denker1991transforming}, and MacKay \cite{mackay1995probable} investigated the posterior probability distributions of neural networks and treated the search in the model space (the space of architectures, weight decay, regularizers, etc..) as an inference problem and tried to solve it using Laplace approximations.
 As a response to the limitations of Laplace approximations, Neal \cite{neal2012bayesian} investigated the use of hybrid Monte Carlo for training neural networks, although it has so far been difficult to apply these to the large sizes of neural networks built in modern applications. 
 However,these approaches lacked scalability in terms of both the network architecture and the data size. 
+
+
 More recently, Graves \cite{graves2011practical} derived a variational inference scheme for neural networks and Blundell et al. \cite{blundell2015weight} extended this with an update for the variance that is unbiased and simpler to compute. Graves \cite{graves2016stochastic} derives a similar algorithm in the case of a mixture posterior probability distribution. 
 A more scalable solution based on expectation propagation was proposed by Soudry \cite{Soudry:NIPS2014_5269} in 2014. While this method works for networks with binary weights, its extension to continuous weights is unsatisfying as it does not produce estimates of posterior variance.
 
 \newline Several authors have claimed that Dropout \cite{srivastava2014dropout} and Gaussian Dropout \cite{wang2013fast} can be viewed as approximate variational inference schemes \cite{gal2015bayesian, kingma2015variational}. We compare our results to Gal's \& Ghahramani's \cite{gal2015bayesian} and discuss the methodological differences in detail.
 
 
-\section{Model Pruning}
+\subsection{Uncertainties estimation}
 
-Some early work in the model pruning domaoin used a second-order Taylor approximation of the increase in the loss function of the network when a weight is set to zero \cite{lecun1990optimal}. A diagonal Hessian approximation was used to calculate the saliency for each parameter \cite{lecun1990optimal} and the low-saliency parameters were pruned from the network and the network was retrained. In Optimal Brain Surgeon \citep{298572}, the saliency for each parameter
-was computed using the inverse Hessian matrix, and the low-saliency
-weights are pruned and all other weights in the network are updated
-using the second-order information.
+The Bayesian approach provides a theoretical framework for modeling uncertainty \cite{gal2015bayesian}, which has prompted several attempts to extend neural networks (NN) into a Bayesian setting. Most notably, Bayesian neural networks (BNNs) have been studied since the 1990’s \cite{neal2012bayesian}, but do not scale well and struggle to compete with modern deep learning architectures. Recently, Gal and Gharmani \cite{gal2015bayesian} developed a practical solution to obtain
+uncertainty estimates by casting dropout training in conventional
+deep networks as a Bayesian approximation of a
+Gaussian Process (its correspondence to a general approximate
+Bayesian model was shown in (Gal, 2016) \cite{Gal2015Dropout}). They
+showed that any network trained with dropout is an approximate
+Bayesian model, and uncertainty estimates can be obtained by computing the variance on multiple predictions with different dropout masks.
+
+\subsection{Model Pruning}
+
+Some early work in the model pruning domaoin used a second-order Taylor approximation of the increase in the loss function of the network when a weight is set to zero \cite{lecun1990optimal}. A diagonal Hessian approximation was used to calculate the saliency for each parameter \cite{lecun1990optimal} and the low-saliency parameters were pruned from the network and the network was retrained.
+
+
 Narang \cite{DBLP:journals/corr/NarangDSE17} showed that a pruned RNN and GRU model performed better for the task of speech recognition compared to a dense network of original size. This result is very similar to the results obtained in our case where a pruned model achieved better results than a normal network. However, no comparisons can be drawn as the model architecture (CNN vs RNN) used and the tasks (Computer Vision vs Speech Recogniton) are completely different.  Narang \cite{DBLP:journals/corr/NarangDSE17} in his work introduced a gradual pruning scheme based on pruning all the weights in a layer
 less than some threshold (manually chosen) which is linear with some
 slope in phase 1 and linear with some slope in phase 2 followed by
 normal training. However, we reduced the number of filters to half for one case and in the other case, we induced a sparsity based on L1 regularization to remove the less contributing weights and reduced the parameters. 
+
+
 Other similar work \cite{DBLP:journals/corr/AnwarHS15, DBLP:journals/corr/LebedevGROL14, DBLP:journals/corr/ChangpinyoSZ17} to our work that reduces or removed the redundant connections or induces sparsity are motivated by the desire to speed up computation.
 The techniques used are highly convolutional layer dependent and is not applicable to other architectures like Recurrent Neural Networks. 
 One another interesting method of pruning is to represent each parameter with a smaller floating point number like 16-bits instead of 64 bits. This way there is a speed up in the training and inference speed and the model is less computationally expensive. 
