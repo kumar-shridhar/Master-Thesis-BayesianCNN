@@ -48,13 +48,7 @@ A more scalable solution based on expectation propagation was proposed by Soudry
 
 \subsection{Uncertainties estimation}
 
-The Bayesian approach provides a theoretical framework for modeling uncertainty \cite{gal2015bayesian}, which has prompted several attempts to extend neural networks (NN) into a Bayesian setting. Most notably, Bayesian neural networks (BNNs) have been studied since the 1990’s \cite{neal2012bayesian}, but do not scale well and struggle to compete with modern deep learning architectures. Recently, Gal and Gharmani \cite{gal2015bayesian} developed a practical solution to obtain
-uncertainty estimates by casting dropout training in conventional
-deep networks as a Bayesian approximation of a
-Gaussian Process (its correspondence to a general approximate
-Bayesian model was shown in (Gal, 2016) \cite{Gal2015Dropout}). They
-showed that any network trained with dropout is an approximate
-Bayesian model, and uncertainty estimates can be obtained by computing the variance on multiple predictions with different dropout masks.
+Neural Networks can predict uncertainty when Bayesian methods are introduced in it. An attempt to model uncertainty has been studied from 1990's \cite{neal2012bayesian} but has not been applied successfully until 2015. Gal and Gharmani \cite{Gal2015Dropout} in 2015 provided a theoretical framework for modeling Bayesian uncertainty. Gal and Gharmani \cite{gal2015bayesian} obtained the uncertainty estimates by casting dropout training in conventional deep networks as a Bayesian approximation of a Gaussian Process. They showed that any network trained with dropout is an approximate Bayesian model, and uncertainty estimates can be obtained by computing the variance on multiple predictions with different dropout masks.
 
 \subsection{Model Pruning}
 
