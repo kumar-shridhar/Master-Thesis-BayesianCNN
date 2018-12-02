@@ -250,9 +250,9 @@ In Figure \ref{fig:regularization}, we show how Bayesian networks incorporate na
 
 \section{Model Pruning}
 
-\subsubsection{Halving the Parameters number}
+\subsubsection{Halving the NUmber of Filters}
 
-For every parameter for a frequentist inference network, Bayesian \acp{cnn} has two parameters ($\mu$, $\sigma$). Halving the number of parameters of Bayesian AlexNet ensures the number of parameters of it are comparable with a frequentist inference network. The number of filtres of ALexNet are halved and a new architecture called AlexNetHalf is defined in Figure \ref{tab:AlexNetHalfArchitecture}. 
+For every parameter for a frequentist inference network, Bayesian \acp{cnn} has two parameters ($\mu$, $\sigma$). Halving the number of parameters of Bayesian AlexNet ensures the number of parameters of it are comparable with a frequentist inference network. The number of filtres of ALexNet are halved and a new architecture called AlexNetHalf is defined in Figure 5.4. 
 
 \begin{table}[h!]
     \centering
@@ -287,7 +287,7 @@ For every parameter for a frequentist inference network, Bayesian \acp{cnn} has 
 
 
 The AlexNetHalf architecture was trained and validated on the MNIST and CIFAR10 dataset and the results are shown in Table \ref{tab:resultsAlexNetHalf}. The accuracy of pruned AlexNet with only half the number of filters compared to the normal architecture shows an accuracy gain of 6 percent in case of CIFAR10 and equivalent performance for MNIST dataset. Lesser filters learn the most important features which proved better at inter-class classification is one of the explaination for it. Upon visualization of the filters, no distinct clearification can be made to prove the previous statement.  
-Another possible explaination could be the model is fitting perfectly after reducing the number of filters ensuring the model is not overfitting and validation accuracy is comparitively higher. CIFAR-100 higher validation accuracy on ALexNetHalf and a lower training accuracy than Bayesian AlexNet proves the theory. Using lesser number of filters further enhances the regularization effect and makes the model more robust against overfitting. 
+Another possible explaination could be the model is fitting perfectly after reducing the number of filters ensuring the model is not overfitting and validation accuracy is comparitively higher. CIFAR-100 higher validation accuracy on ALexNetHalf and a lower training accuracy than Bayesian AlexNet proves the theory. Using lesser number of filters further enhances the regularization effect and makes the model more robust against overfitting. Similar results have been achieved by Narang \cite{DBLP:journals/corr/NarangDSE17} in his work where a pruned model achieved better accuracy compared to the original architecture in a speech recognition task. Suppressing or removing the weights that has lesser or no contribution to the prediction makes the model rely its prediction on the most prominent and unique features and hence improves the prediction accuracy.
 
 \begin{table}[H]
 \tiny
@@ -310,6 +310,47 @@ Another possible explaination could be the model is fitting perfectly after redu
     \caption{Comparison of validation accuracies (in percentage) for AlexNet with variational inference (VI), AlexNet with frequentist inference and AlexNet with half number of filters halved for MNIST, CIFAR-10 and CIFAR-100 datasets.}
     \label{tab:resultsAlexNetHalf}
 \end{table}
+
+\subsubsection{Applying L1 Norm}
+
+
+L1 norm induces sparsity in the trained model paramters and sets some values to zero. We remove the zero valued parameters and keep the non-zero parameters for a trained Bayesian AlexNet on MNIST and CIFAR-10 datasets. We remove half of the parameters to make the number of parameters in a Bayeisan Network equal to the number of parameters in the point-estimate architecture. \\ Table \ref{tab:resultsL1Norm} shows the comparison of validation accuracies of the applied L1 Norm AlexNet Bayesian architecture with Bayesian AlexNet architecture and with AlexNet frequentist architecture. 
+
+\begin{table}[H]
+\tiny
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \resizebox{\linewidth}{!}{
+    \begin{tabular}{ l  c  c  c  } 
+     \hline
+      \empty & MNIST & CIFAR-10  \\ [0.75ex]
+     \hline
+     Bayesian AlexNet (with VI) & 99 & 73  \\
+     
+     Frequentist AlexNet & 99 & 73   \\
+     
+     Bayesian AlexNet with L1 Norm (with VI) & 99 & 71  \\
+     
+     \hline \\
+    \end{tabular}}
+    \renewcommand{\arraystretch}{1.5}
+    \caption{Comparison of validation accuracies (in percentage) for AlexNet with variational inference (VI), AlexNet with frequentist inference and BayesianAlexNet with L1 norm applied for MNIST and CIFAR-10 datasets.}
+    \label{tab:resultsL1Norm}
+\end{table}
+
+One thing to note here is that the numbers of parameters of Bayesian Network after applying L1 norm is not necessarily equal to the number of parameters in the frequentist AlexNet architecture. It depends on the datasize and the number of classes. However the number of parameters in case og MNIST and CIFAR-10 are pretty comparable and there is not much reduction in the accuracy either. Also, the early stoppig was applied when there is no change in the validation accuracy for 5 epochs and the model was saved and later pruned with the application of L1 norm.
+
+\section{Training Time}
+
+Training time of a Bayesian \acp{cnn} is twice of a frequentist network with similar architecture when the number of samples is equal to one. In general, the training time of a Bayesian \acp{cnn}, $T$ is defined as:
+\begin{align}
+T = 2 * number of samples * t
+\end{align}
+where. $t$ is the training time of a frequentist network. 
+The factor of 2 is present due to the double learned paramters of the network i.e. mean and variance for every single point estimate in the frequentist networks.
+
+However, there is no difference in the inference time for both the networks. 
+
 
 \ifpdf
     \graphicspath{{Chapter2/Figs/Raster/}{Chapter2/Figs/PDF/}{Chapter2/Figs/}}
