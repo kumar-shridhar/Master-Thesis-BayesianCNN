@@ -48,7 +48,7 @@ In this section, we explain our algorithm of building a \ac{cnn} with probabilit
 %
 \begin{figure}[b!] 
 \begin{center}
-\includegraphics[width=\linewidth]{Chapter4/Figs/CNNwithdist_grey.png}}
+\includegraphics[width=\linewidth]{Chapter4/Figs/CNNwithdist_grey.png}
 \caption{Fully Bayesian perspective of an exemplary \ac{cnn}. Weights in filters of convolutional layers, and weights in fully-connected layers have the form of a probability distribution.}
 \label{fig:CNNwithdist_grey}
 \end{center}
@@ -95,3 +95,11 @@ This quantity can be decomposed into the aleatoric and epistemic uncertainty \ci
 \end{equation}
 where $\Bar{p} = \frac{1}{T}\sum_{t=1}^T \hat{p}_t$ and $\hat{p}_t = \text{Softmax}\big ( f_{w_{t}}(x^*) \big )$.
 \newline It is of paramount importance that uncertainty is split into aleatoric and epistemic quantities since it allows the modeler to evaluate the room for improvements: while aleatoric uncertainty (also known as statistical uncertainty) is merely a measure for the variation of ("noisy") data, epistemic uncertainty is caused by the model. Hence, a modeler can see whether the quality of the data is low (i.e. high aleatoric uncertainty), or the model itself is the cause for poor performances (i.e. high epistemic uncertainty). The former can be improved by gathering more data, whereas the latter requests to refine the model \cite{der2009aleatory}.
+
+\section{Model Pruning}
+
+Model pruning means the reduction in the model weights parameters to reduce the model overall non-zero weights, inference time and computation cost. In our work, a Bayesian Convolutional Network learns two weights, i.e: the mean and the variance compared to point estimate learning one single weight. This makes the overall number of parameters of a Bayesian Network twice as compared to the parameters of a point estimate similar architecture.
+
+To make the Bayesian \acp{cnn} parameters equivalent to point estimate architecture, the number of filters in the Bayesian architectures is reduced to half. This makes up for the double learned parameters (mean and variance) against one in point estimates and makes the overall parameters equal for both networks. 
+
+Another technique used is the usage of the \textit{L1 normalization} on the learned weights of every layers.  By L1 norm, we make the vector $x$ sparse, as most of its components becomes zeros, and at the same time, the remaining non-zero components captures the most important features. This way the model number of parameters is reduced without affecting the overall performance of the model. 
