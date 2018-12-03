@@ -1,12 +1,32 @@
 %!TEX root = ../thesis.tex
 % ******************************* Thesis Appendix B ********************************
 
-\chapter{Failed experiments}
+\chapter{How to replicate results}
 
-\LaTeX.cls files can be accessed system-wide when they are placed in the
-<texmf>/tex/latex directory, where <texmf> is the root directory of the user’s \TeX installation. On systems that have a local texmf tree (<texmflocal>), which
-may be named ``texmf-local'' or ``localtexmf'', it may be advisable to install packages in <texmflocal>, rather than <texmf> as the contents of the former, unlike that of the latter, are preserved after the \LaTeX system is reinstalled and/or upgraded.
+Install PyTorch from the oficial website (\url{https://pytorch.org/})
 
-It is recommended that the user create a subdirectory <texmf>/tex/latex/CUED for all CUED related \LaTeX class and package files. On some \LaTeX systems, the directory look-up tables will need to be refreshed after making additions or deletions to the system files. For \TeX Live systems this is accomplished via executing ``texhash'' as root. MIK\TeX users can run ``initexmf -u'' to accomplish the same thing.
+\begin{verbatim} 
 
-Users not willing or able to install the files system-wide can install them in their personal directories, but will then have to provide the path (full or relative) in addition to the filename when referring to them in \LaTeX.
+git clone https://github.com/kumar-shridhar/PyTorch-BayesianCNN
+pip install -r requirements.txt
+
+\end{verbatim}
+\textit{cd} into respective folder/ task to replicate (Image Recognition, Super Resolution or GAN)
+
+\subsection{Image Recognition}
+
+\begin{verbatim} 
+python main_Bayesian.py
+\end{verbatim}
+
+to replicate the Bayesian \acp{cnn} results.
+
+\begin{verbatim} 
+python main_nonBayesian.py
+\end{verbatim}
+
+to replicate the Frequentist \acp{cnn} results.\\
+
+\\For more details, read the README sections of the repo : \url{https://github.com/kumar-shridhar/PyTorch-BayesianCNN}
+
+

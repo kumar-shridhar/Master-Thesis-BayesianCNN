@@ -1,132 +1,164 @@
 %!TEX root = ../thesis.tex
 % ******************************* Thesis Appendix A ****************************
-\chapter{Foundations} 
+\chapter{Experiment Specifications} 
 
-\section*{Windows OS}
+\section*{Bayesian Settings}
 
-\subsection*{TeXLive package - full version}
-\begin{enumerate}
-\item	Download the TeXLive ISO (2.2GB) from\\
-\href{https://www.tug.org/texlive/}{https://www.tug.org/texlive/}
-\item	Download WinCDEmu (if you don't have a virtual drive) from \\
-\href{http://wincdemu.sysprogs.org/download/}
-{http://wincdemu.sysprogs.org/download/}
-\item	To install Windows CD Emulator follow the instructions at\\
-\href{http://wincdemu.sysprogs.org/tutorials/install/}
-{http://wincdemu.sysprogs.org/tutorials/install/}
-\item	Right click the iso and mount it using the WinCDEmu as shown in \\
-\href{http://wincdemu.sysprogs.org/tutorials/mount/}{
-http://wincdemu.sysprogs.org/tutorials/mount/}
-\item	Open your virtual drive and run setup.pl
-\end{enumerate}
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{2}
+    \begin{tabular}[c]{c | c} 
+     \hline
+     variable & value \\ [0.5ex] 
+     \hline
+     learning rate &  0.001\\ 
+     
+     epochs & 100 \\
+     
+     batch size & 256 \\
+     
+     sample size & 10-25 \\
+     
+     loss & cross-entropy \\
+     
+     $(\alpha \mu^2)_{init}$ of approximate posterior $q_{\theta}(w|\mathcal{D})$ & -10 \\
+     
+     optimizer & Adam \cite{kingma2014adam} \\
+     
+     $\lambda$ in $\ell$-2 normalisation & 0.0005 \\
+    
+     $\beta_i$ & $\frac{2^{M-i}}{2^M-1}$ \cite{blundell2015weight} \\ [1ex] 
+     \hline
+    \end{tabular} 
+    \renewcommand{\arraystretch}{2}
+\end{table}
 
-or
+Sample size can vary from 10 to 25 as this range provided the best results. However, it can be played around with. For most of our experiments it is either 10 or 25 unless specified otherwise. 
 
-\subsection*{Basic MikTeX - \TeX~ distribution}
-\begin{enumerate}
-\item	Download Basic-MiK\TeX (32bit or 64bit) from\\
-\href{http://miktex.org/download}{http://miktex.org/download}
-\item	Run the installer 
-\item	To add a new package go to Start >> All Programs >> MikTex >> Maintenance (Admin) and choose Package Manager
-\item	Select or search for packages to install
-\end{enumerate}
+\section*{Non Bayesian Settings}
 
-\subsection*{TexStudio - \TeX~ editor}
-\begin{enumerate}
-\item	Download TexStudio from\\
-\href{http://texstudio.sourceforge.net/\#downloads}
-{http://texstudio.sourceforge.net/\#downloads} 
-\item	Run the installer
-\end{enumerate}
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{2}
+    \begin{tabular}[c]{c | c} 
+     \hline
+     variable & value \\ [0.5ex] 
+     \hline
+     learning rate &  0.001\\ 
+     
+     epochs & 100 \\
+     
+     batch size & 256 \\
+     
+     loss & cross-entropy \\
+     
+     initializer & Xavier \cite{glorot2010understanding} or Normal \\
+     
+     optimizer & Adam \cite{kingma2014adam} \\ [1ex] 
+     \hline
+    \end{tabular} 
+    \renewcommand{\arraystretch}{2}
+\end{table}
 
-\section*{Mac OS X}
-\subsection*{MacTeX - \TeX~ distribution}
-\begin{enumerate}
-\item	Download the file from\\
-\href{https://www.tug.org/mactex/}{https://www.tug.org/mactex/}
-\item	Extract and double click to run the installer. It does the entire configuration, sit back and relax.
-\end{enumerate}
+The weights were initialized with Xavier initialization \cite{glorot2010understanding} at first, but to make it consistent with the Bayesian networks where initialization was Normal initialization (mean = 0 and variance = 1), the initiliazer was changed to Normal initialization.
 
-\subsection*{TexStudio - \TeX~ editor}
-\begin{enumerate}
-\item	Download TexStudio from\\
-\href{http://texstudio.sourceforge.net/\#downloads}
-{http://texstudio.sourceforge.net/\#downloads} 
-\item	Extract and Start
-\end{enumerate}
+\section*{Architectures}
 
+\subsection{LeNet-5}
+ 
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{2}
+    \begin{tabular}{c c c c c c} 
+     \hline
+     layer type & width & stride & padding & input shape & nonlinearity \\ [0.5ex] 
+     \hline
+     convolution ($5\times5$) & 6 & 1 & 0 & $M\times1\times32\times32$ & Softplus \\ 
+     
+     Mmax-pooling ($2\times2$) & \empty & 2 & 0 & $M\times6\times28\times28$ & \empty \\
+     
+     convolution ($5\times5$) & 16 & 1 & 0 & $M\times1\times14\times14$ & Softplus \\
+     
+     max-pooling ($2\times2$) & \empty & 2 & 0 & $M\times16\times10\times10$ & \empty \\
+    
+     fully-connected & 120 & \empty & \empty & $M\times400$ & Softplus \\
+     
+     fully-connected & 84 & \empty & \empty & $M\times120$ & Softplus \\
+     
+     fully-connected & 10 & \empty & \empty & $M\times84$ & \empty \\ [1ex] 
+     \hline
+    \end{tabular} 
+    \renewcommand{\arraystretch}{1}
+    \label{tab:LeNet}
+    \caption{LeNet architecture with original configurations as defined in the paper. \cite{lecun1998gradient}}
+\label{tab:AlexNet}
 
-\section*{Unix/Linux}
-\subsection*{TeXLive - \TeX~ distribution}
-\subsubsection*{Getting the distribution:}
-\begin{enumerate}
-\item	TexLive can be downloaded from\\
-\href{http://www.tug.org/texlive/acquire-netinstall.html}
-{http://www.tug.org/texlive/acquire-netinstall.html}.
-\item	TexLive is provided by most operating system you can use (rpm,apt-get or yum) to get TexLive distributions
-\end{enumerate}
+\end{table}
 
-\subsubsection*{Installation}
-\begin{enumerate}
-\item	Mount the ISO file in the mnt directory
-\begin{verbatim}
-mount -t iso9660 -o ro,loop,noauto /your/texlive####.iso /mnt
-\end{verbatim}
+\subsection{AlexNet}
 
-\item	Install wget on your OS (use rpm, apt-get or yum install)
-\item	Run the installer script install-tl.
-\begin{verbatim}
-	cd /your/download/directory
-	./install-tl
-\end{verbatim}
-\item	Enter command `i' for installation
-
-\item	Post-Installation configuration:\\
-\href{http://www.tug.org/texlive/doc/texlive-en/texlive-en.html\#x1-320003.4.1}
-{http://www.tug.org/texlive/doc/texlive-en/texlive-en.html\#x1-320003.4.1} 
-\item	Set the path for the directory of TexLive binaries in your .bashrc file
-\end{enumerate}
-
-\subsubsection*{For 32bit OS}
-For Bourne-compatible shells such as bash, and using Intel x86 GNU/Linux and a default directory setup as an example, the file to edit might be \begin{verbatim}
-edit $~/.bashrc file and add following lines
-PATH=/usr/local/texlive/2011/bin/i386-linux:$PATH; 
-export PATH 
-MANPATH=/usr/local/texlive/2011/texmf/doc/man:$MANPATH;
-export MANPATH 
-INFOPATH=/usr/local/texlive/2011/texmf/doc/info:$INFOPATH;
-export INFOPATH
-\end{verbatim}
-\subsubsection*{For 64bit OS}
-\begin{verbatim}
-edit $~/.bashrc file and add following lines
-PATH=/usr/local/texlive/2011/bin/x86_64-linux:$PATH;
-export PATH 
-MANPATH=/usr/local/texlive/2011/texmf/doc/man:$MANPATH;
-export MANPATH 
-INFOPATH=/usr/local/texlive/2011/texmf/doc/info:$INFOPATH;
-export INFOPATH
-
-\end{verbatim}
-
-
-
-%\subsection{Installing directly using Linux packages} 
-\subsubsection*{Fedora/RedHat/CentOS:}
-\begin{verbatim} 
-sudo yum install texlive 
-sudo yum install psutils 
-\end{verbatim}
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{2}
+    \begin{tabular}{c c c c c c} 
+ \hline
+ layer type & width & stride & padding & input shape & nonlinearity \\ [0.5ex] 
+ \hline
+ convolution ($11\times11$) & 64 & 4 & 5 & $M\times3\times32\times32$ & Softplus \\ 
+ 
+ max-pooling ($2\times2$) & \empty & 2 & 0 & $M\times64\times32\times32$ & \empty \\
+ 
+ convolution ($5\times5$) & 192 & 1 & 2 & $M\times64\times15\times15$ & Softplus \\
+ 
+ max-pooling ($2\times2$) & \empty & 2 & 0 & $M\times192\times15\times15$ & \empty \\
+ 
+ convolution ($3\times3$) & 384 & 1 & 1 & $M\times192\times7\times7$ & Softplus \\
+ 
+ convolution ($3\times3$) & 256 & 1 & 1 & $M\times384\times7\times7$ & Softplus \\
+ 
+ convolution ($3\times3$) & 128 & 1 & 1 & $M\times256\times7\times7$ & Softplus \\
+ 
+ max-pooling ($2\times2$) & \empty & 2 & 0 & $M\times128\times7\times7$ & \empty \\
+ 
+ fully-connected & 128 & \empty & \empty & $M\times128$ & \empty \\ [1ex] 
+ \hline
+\end{tabular}
+\renewcommand{\arraystretch}{1}
+\caption{AlexNet architecture with original configurations as defined in the paper. \cite{krizhevsky2012imagenet}}
+\label{tab:AlexNet}
+\end{table}
 
 
-\subsubsection*{SUSE:}
-\begin{verbatim}
-sudo zypper install texlive
-\end{verbatim}
+\subsection{AlexNetHalf}
 
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{2}
+    \begin{tabular}{c c c c c c} 
+ \hline
+ layer type & width & stride & padding & input shape & nonlinearity \\ [0.5ex] 
+ \hline
+ convolution ($11\times11$) & 32 & 4 & 5 & $M\times3\times32\times32$ & Softplus \\ 
+ 
+ max-pooling ($2\times2$) & \empty & 2 & 0 & $M\times32\times32\times32$ & \empty \\
+ 
+ convolution ($5\times5$) & 96 & 1 & 2 & $M\times32\times15\times15$ & Softplus \\
+ 
+ max-pooling ($2\times2$) & \empty & 2 & 0 & $M\times96\times15\times15$ & \empty \\
+ 
+ convolution ($3\times3$) & 192 & 1 & 1 & $M\times96\times7\times7$ & Softplus \\
+ 
+ convolution ($3\times3$) & 128 & 1 & 1 & $M\times192\times7\times7$ & Softplus \\
+ 
+ convolution ($3\times3$) & 64 & 1 & 1 & $M\times128\times7\times7$ & Softplus \\
+ 
+ max-pooling ($2\times2$) & \empty & 2 & 0 & $M\times64\times7\times7$ & \empty \\
+ 
+ fully-connected & 64 & \empty & \empty & $M\times64$ & \empty \\ [1ex] 
+ \hline
+\end{tabular}
+\renewcommand{\arraystretch}{1.5}
+\label{tab:AlexNetHalfArchitecture}
+\caption{AlexNetHalf with number of filters halved compared to the original architecture.}
+\end{table}
 
-\subsubsection*{Debian/Ubuntu:}
-\begin{verbatim} 
-sudo apt-get install texlive texlive-latex-extra 
-sudo apt-get install psutils
-\end{verbatim}
