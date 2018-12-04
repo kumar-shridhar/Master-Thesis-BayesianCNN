@@ -20,7 +20,7 @@
             \item Bayesian \acp{cnn} with Variational Inference based on Bayes by Backprop.
             \item Bayesian convolutional operations with mean and variance
             \item Local reparameterization trick for Bayesian \acp{cnn}.
-            \item Uncertainity estimation in a Bayesian network.
+            \item Uncertainty estimation in a Bayesian network.
             \item Using L1 norm for reducing the number of parameters in a Bayesian network.
         \end{itemize}
     }
@@ -29,7 +29,7 @@
 \pagebreak
 
 \section{Bayesian convolutional neural networks with variational inference}
-In this section, we explain our algorithm of building a \ac{cnn} with probability distributions over its weights in each filter, as seen in Figure \ref{fig:filter_scalar}, and apply variational inference, i.e. \textit{Bayes by Backprop}, to compute the intractable true posterior probability distribution, as described in the previous section. Notably, a fully Bayesian perspective on a \ac{cnn} is for most \ac{cnn} architectures not accomplished by merely placing probability distributions over weights in convolutional layers; it also requires probability distributions over weights in fully-connected layers (see Figure \ref{fig:CNNwithdist_grey}). 
+In this section, we explain our algorithm of building a \ac{cnn} with probability distributions over its weights in each filter, as seen in Figure \ref{fig:filter_scalar}, and apply variational inference, i.e. \textit{Bayes by Backprop}, to compute the intractable true posterior probability distribution, as described in the previous section. Notably, a fully Bayesian perspective on a \ac{cnn} is for most \ac{cnn} architectures not accomplished by merely placing probability distributions overweights in convolutional layers; it also requires probability distributions overweights in fully-connected layers (see Figure \ref{fig:CNNwithdist_grey}). 
 %
 \begin{figure}[H] 
 \centering
@@ -102,4 +102,4 @@ Model pruning means the reduction in the model weights parameters to reduce the 
 
 To make the Bayesian \acp{cnn} parameters equivalent to point estimate architecture, the number of filters in the Bayesian architectures is reduced to half. This makes up for the double learned parameters (mean and variance) against one in point estimates and makes the overall parameters equal for both networks. 
 
-Another technique used is the usage of the \textit{L1 normalization} on the learned weights of every layers.  By L1 norm, we make the vector $x$ sparse, as most of its components becomes zeros, and at the same time, the remaining non-zero components captures the most important features. This way the model number of parameters is reduced without affecting the overall performance of the model. 
+Another technique used is the usage of the \textit{L1 normalization} on the learned weights of every layer.  By L1 norm, we make the vector $x$ sparse, as most of its components become zeros, and at the same time, the remaining non-zero components capture the most important features. This way the model number of parameters is reduced without affecting the overall performance of the model. 

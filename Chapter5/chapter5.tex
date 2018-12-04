@@ -62,7 +62,7 @@ where $n$ is the number of draws.
 Let's break the Objective Function in \eqref{cost} and discuss in more details. 
 \subsubsection{Variational Posterior }
 
-The first term in the equation \eqref{cost} is the variational posterior. The variational posterior is taken as Gaussian distribution centered around mean $\mu$ and variance as $\sigma^2$. 
+The first term in the equation \eqref{cost} is the variational posterior. The variational posterior is taken as Gaussian distribution centred around mean $\mu$ and variance as $\sigma^2$. 
 
 \begin{equation}
     q_{\theta}(w^{(i)}|\mathcal{D})= \prod_{i} \mathcal{N}(w_{i} | \mu,\sigma^2)
@@ -94,17 +94,17 @@ The final term of the equation \eqref{cost} $\log p(\mathcal{D}|w^{(i)})$ is the
 
 \subsubsection{Parameter Initialization}
 
-We use a Gaussian distribution and we store mean and variance values instead of just one weight. The way mean $\mu$ and variance $\sigma$ is computed is defined in the previous chapter. Variance cannot be negative and it is ensured by using \textit{softplus} as activation function. We express variance $\sigma$ as $\sigma_{i}=softplus(\rho_{i})$ where $\rho$ is an unconstrained parameter. \\
+We use a Gaussian distribution and we store mean and variance values instead of just one weight. The way mean $\mu$ and variance $\sigma$ is computed is defined in the previous chapter. Variance cannot be negative and it is ensured by using \textit{softplus} as the activation function. We express variance $\sigma$ as $\sigma_{i}=softplus(\rho_{i})$ where $\rho$ is an unconstrained parameter. \\
 
 We take the Gaussian distribution and initialize mean $\mu$ as 0 and variance $\sigma$ (and hence $\rho$) as very small number. We perform gradient descent over $\theta$ = ($\mu$, $\rho$), and individual weight $w_{i} \sim \mathcal{N} (w_{i} | \mu_{i}, \sigma_{i}$).  
 
 \subsubsection{Optimizer}
 
-For all our tasks, we take Adam optimizer \cite{KingmaB14} to optmize the parameters. We also perform the local reparameterization trick as mentioned in the previous section and take the gradient of the combined loss function with respect to the variational parameters ($\mu$, $\rho$).
+For all our tasks, we take Adam optimizer \cite{KingmaB14} to optimize the parameters. We also perform the local reparameterization trick as mentioned in the previous section and take the gradient of the combined loss function with respect to the variational parameters ($\mu$, $\rho$).
 
 \subsubsection{Model Pruning}
 
-We take the weights of all the layers of the network, apply a L1 norm over it and for all the weights value as 0 are removed and the model is pruned. \\ Also, since the Bayesian \acp{cnn} has twice the number of parameters ($\mu$, $\sigma$) compared to a frequentist network (only 1 weight), we reduce the size of our network to half (AlexNet and LeNet- 5) by reducing the number of filters to half. The architecure used is mentioned in the last section of this chapter.
+We take the weights of all the layers of the network, apply an L1 norm over it and for all the weights value as 0 are removed and the model is pruned. \\ Also, since the Bayesian \acp{cnn} has twice the number of parameters ($\mu$, $\sigma$) compared to a frequentist network (only 1 weight), we reduce the size of our network to half (AlexNet and LeNet- 5) by reducing the number of filters to half. The architecture used is mentioned in the last section of this chapter.
 
 \section{Case Study 1: Small Datasets (MNIST, CIFAR-10)}
 
@@ -113,11 +113,11 @@ We train the networks with the MNIST dataset of handwritten digits \cite{lecun19
 \subsection{Datasets}
 \newline
 \subsubsection{MNIST}
-The MNIST database \cite{lecun-mnisthandwrittendigit-2010} of handwritten digits, has a training set of 60,000 examples, and a test set of 10,000 examples. It is a subset of a larger set available from NIST. The digits have been size-normalized and centered in a fixed-size image of 28 by 28 pixels. Each image is grayscaled and is labelled with its corresponding class that ranges from zero to nine.
+The MNIST database \cite{lecun-mnisthandwrittendigit-2010} of handwritten digits have a training set of 60,000 examples and a test set of 10,000 examples. It is a subset of a larger set available from NIST. The digits have been size-normalized and centred in a fixed-size image of 28 by 28 pixels. Each image is grayscaled and is labelled with its corresponding class that ranges from zero to nine.
 \newline
 
 \subsubsection{CIFAR-10}
-The CIFAR-10 are labeled subsets of the 80 million tiny images dataset \cite{Torralba:2008:MTI:1444381.1444403}. The CIFAR-10 dataset has a training dataset of 50,000 colour images in 10 classes, with 5,000 training images per class, each image 32 by 32 pixels large. There are 10000 images for testing. 
+The CIFAR-10 are labelled subsets of the 80 million tiny images dataset \cite{Torralba:2008:MTI:1444381.1444403}. The CIFAR-10 dataset has a training dataset of 50,000 colour images in 10 classes, with 5,000 training images per class, each image 32 by 32 pixels large. There are 10000 images for testing. 
 \newline
 
 \subsection{Results}
@@ -157,7 +157,7 @@ We compare the results of these two approaches to frequentist inference approach
 \end{center}
 \end{figure} 
 
-\newline Figure \ref{fig:MnistCIFAR10reesults} shows the validation accuracies of Bayesian vs Non-Bayesian \acp{cnn}. One thing to observe is that in initial epochs, Bayesian \acp{cnn} trained by variational inference start with a low validation accuracy compared to architectures trained by frequentist inference. This must deduce from the initialization of the variational posterior probability distributions $q_{\theta}(w|\mathcal{D})$ as uniform distributions, while initial point-estimates in architectures trained by frequentist inference are randomly drawn from a standard Gaussian distribution. (For uniformity, we changed the initialization of frequentist architecures from Xavier initialization to standard Gaussian). The latter initialization method ensures the initialized weights are neither too small nor too large. In other words, the motivation of the latter initialization is to start with weights such that the activation functions do not let them begin in saturated or dead regions. This is not true in case of uniform distributions and hence, Bayesian \acp{cnn}' starting validation accuracies can be comparably low.
+\newline Figure \ref{fig:MnistCIFAR10reesults} shows the validation accuracies of Bayesian vs Non-Bayesian \acp{cnn}. One thing to observe is that in initial epochs, Bayesian \acp{cnn} trained by variational inference start with a low validation accuracy compared to architectures trained by frequentist inference. This must deduce from the initialization of the variational posterior probability distributions $q_{\theta}(w|\mathcal{D})$ as uniform distributions, while initial point-estimates in architectures trained by frequentist inference are randomly drawn from a standard Gaussian distribution. (For uniformity, we changed the initialization of frequentist architectures from Xavier initialization to standard Gaussian). The latter initialization method ensures the initialized weights are neither too small nor too large. In other words, the motivation of the latter initialization is to start with weights such that the activation functions do not let them begin in saturated or dead regions. This is not true in case of uniform distributions and hence, Bayesian \acp{cnn}' starting validation accuracies can be comparably low.
 
 \pagebreak
 \newline Figure \ref{fig:std_CNN} displays the convergence of the standard deviation $\sigma$ of the variational posterior probability distribution $q_{\theta}(w|\mathcal{D})$ of a random model parameter over epochs. As aforementioned, all prior probability distributions $p(w)$ are initialized as uniform distributions. The variational posterior probability distributions $q_{\theta}(w|\mathcal{D})$ are approximated as Gaussian distributions which become more confident as more data is processed - observable by the decreasing standard deviation over epochs in Figure \ref{fig:std_CNN}. Although the validation accuracy for MNIST on Bayesian LeNet-5 has already reached 99\%, we can still see a fairly steep decrease in the parameter's standard deviation. In Figure \ref{fig:distribution}, we plot the actual Gaussian variational posterior probability distributions $q_{\theta}(w|\mathcal{D})$ of a random parameter of LeNet-5 trained on CIFAR-10 at some epochs.
@@ -179,7 +179,7 @@ We compare the results of these two approaches to frequentist inference approach
 \end{center}
 \end{figure} 
 
-\newline Figure \ref{fig:distribution} displays the convergence of the Gaussian variational probability distribution of a weight taken randomly from the first layer of LeNet-5 architecuture. The architecture is trained on CIFAR-10 with a 
+\newline Figure \ref{fig:distribution} displays the convergence of the Gaussian variational probability distribution of a weight taken randomly from the first layer of LeNet-5 architecture. The architecture is trained on CIFAR-10 with a 
 
 
 
@@ -187,7 +187,7 @@ We compare the results of these two approaches to frequentist inference approach
 \subsection{Dataset}
 
 \subsubsection{CIFAR-100}
-This dataset is similar to the CIFAR-10, and is a labeled subset of the 80 million tiny images dataset \cite{Torralba:2008:MTI:1444381.1444403}. The dataset has 100 classes containing 600 images each. There are 500 training images and 100 validation images per class. The images are colored with a resolution of 32 by 32 pixels.
+This dataset is similar to the CIFAR-10 and is a labelled subset of the 80 million tiny images dataset \cite{Torralba:2008:MTI:1444381.1444403}. The dataset has 100 classes containing 600 images each. There are 500 training images and 100 validation images per class. The images are coloured with a resolution of 32 by 32 pixels.
 
 \subsection{Results}
 
@@ -228,7 +228,7 @@ In Figure \ref{fig:regularization}, we show how Bayesian networks incorporate na
 
 \section{Uncertainity estimation}
 
-\newline Finally, Table \ref{tab:uncertainty} compares the means of aleatoric and epistemic uncertainties for a Bayesian LeNet-5 with variational inference on MNIST and CIFAR-10. The aleatoric uncertainty of CIFAR-10 is about twenty times as large as that of MNIST. Considering that the aleatoric uncertainty measures the irreducible variability and depends on the predicted values, a larger aleatoric uncertainty for CIFAR-10 can be directly deduced from its lower validation accuracy and may be further due to the smaller number of training examples. The epistemic uncertainty of CIFAR-10 is about fifteen times larger than that of MNIST, which we anticipated, since epistemic uncertainty decreases proportional to validation accuracy. 
+\newline Finally, Table \ref{tab:uncertainty} compares the means of aleatoric and epistemic uncertainties for a Bayesian LeNet-5 with variational inference on MNIST and CIFAR-10. The aleatoric uncertainty of CIFAR-10 is about twenty times as large as that of MNIST. Considering that the aleatoric uncertainty measures the irreducible variability and depends on the predicted values, a larger aleatoric uncertainty for CIFAR-10 can be directly deduced from its lower validation accuracy and may be further due to the smaller number of training examples. The epistemic uncertainty of CIFAR-10 is about fifteen times larger than that of MNIST, which we anticipated since epistemic uncertainty decreases proportionally to validation accuracy. 
 \begin{table}[t!]
 \tiny
     \centering
@@ -252,7 +252,7 @@ In Figure \ref{fig:regularization}, we show how Bayesian networks incorporate na
 
 \subsubsection{Halving the NUmber of Filters}
 
-For every parameter for a frequentist inference network, Bayesian \acp{cnn} has two parameters ($\mu$, $\sigma$). Halving the number of parameters of Bayesian AlexNet ensures the number of parameters of it are comparable with a frequentist inference network. The number of filtres of ALexNet are halved and a new architecture called AlexNetHalf is defined in Figure 5.4. 
+For every parameter for a frequentist inference network, Bayesian \acp{cnn} has two parameters ($\mu$, $\sigma$). Halving the number of parameters of Bayesian AlexNet ensures the number of parameters of it is comparable with a frequentist inference network. The number of filters of ALexNet are halved and a new architecture called AlexNetHalf is defined in Figure 5.4. 
 
 \begin{table}[h!]
     \centering
@@ -286,8 +286,8 @@ For every parameter for a frequentist inference network, Bayesian \acp{cnn} has 
 \end{table}
 
 
-The AlexNetHalf architecture was trained and validated on the MNIST and CIFAR10 and CIFAR100 dataset and the results are shown in Table \ref{tab:resultsAlexNetHalf}. The accuracy of pruned AlexNet with only half the number of filters compared to the normal architecture shows an accuracy gain of 6 percent in case of CIFAR10 and equivalent performance for MNIST dataset. Lesser filters learn the most important features which proved better at inter-class classification is one of the explanation for it. Upon visualization of the filters, no distinct clarification can be made to prove the previous statement.  
-Another possible explaination could be the model is fitting perfectly after reducing the number of filters ensuring the model is not overfitting and validation accuracy is comparitively higher. CIFAR-100 higher validation accuracy on ALexNetHalf and a lower training accuracy than Bayesian AlexNet proves the theory. Using lesser number of filters further enhances the regularization effect and makes the model more robust against overfitting. Similar results have been achieved by Narang \cite{DBLP:journals/corr/NarangDSE17} in his work where a pruned model achieved better accuracy compared to the original architecture in a speech recognition task. Suppressing or removing the weights that has lesser or no contribution to the prediction makes the model rely its prediction on the most prominent and unique features and hence improves the prediction accuracy.
+The AlexNetHalf architecture was trained and validated on the MNIST and CIFAR10 and CIFAR100 dataset and the results are shown in Table \ref{tab:resultsAlexNetHalf}. The accuracy of pruned AlexNet with only half the number of filters compared to the normal architecture shows an accuracy gain of 6 per cent in case of CIFAR10 and equivalent performance for MNIST dataset. Lesser filters learn the most important features which proved better at inter-class classification is one of the explanations for it. Upon visualization of the filters, no distinct clarification can be made to prove the previous statement.  
+Another possible explanation could be the model is fitting perfectly after reducing the number of filters ensuring the model is not overfitting and validation accuracy is comparatively higher. CIFAR-100 higher validation accuracy on ALexNetHalf and a lower training accuracy than Bayesian AlexNet proves the theory. Using a lesser number of filters further enhances the regularization effect and makes the model more robust against overfitting. Similar results have been achieved by Narang \cite{DBLP:journals/corr/NarangDSE17} in his work where a pruned model achieved better accuracy compared to the original architecture in a speech recognition task. Suppressing or removing the weights that have lesser or no contribution to the prediction makes the model rely its prediction on the most prominent and unique features and hence improves the prediction accuracy.
 
 \begin{table}[H]
 \tiny
@@ -314,7 +314,7 @@ Another possible explaination could be the model is fitting perfectly after redu
 \subsubsection{Applying L1 Norm}
 
 
-L1 norm induces sparsity in the trained model paramters and sets some values to zero. We remove the zero valued parameters and keep the non-zero parameters for a trained Bayesian AlexNet on MNIST and CIFAR-10 datasets. We remove half of the parameters to make the number of parameters in a Bayeisan Network equal to the number of parameters in the point-estimate architecture. \\ Table \ref{tab:resultsL1Norm} shows the comparison of validation accuracies of the applied L1 Norm AlexNet Bayesian architecture with Bayesian AlexNet architecture and with AlexNet frequentist architecture. 
+L1 norm induces sparsity in the trained model parameters and sets some values to zero. We remove the zero-valued parameters and keep the non-zero parameters for a trained Bayesian AlexNet on MNIST and CIFAR-10 datasets. We remove half of the parameters to make the number of parameters in a Bayesian Network equal to the number of parameters in the point-estimate architecture. \\ Table \ref{tab:resultsL1Norm} shows the comparison of validation accuracies of the applied L1 Norm AlexNet Bayesian architecture with Bayesian AlexNet architecture and with AlexNet frequentist architecture. 
 
 \begin{table}[H]
 \tiny
@@ -338,7 +338,7 @@ L1 norm induces sparsity in the trained model paramters and sets some values to 
     \label{tab:resultsL1Norm}
 \end{table}
 
-One thing to note here is that the numbers of parameters of Bayesian Network after applying L1 norm is not necessarily equal to the number of parameters in the frequentist AlexNet architecture. It depends on the datasize and the number of classes. However the number of parameters in case og MNIST and CIFAR-10 are pretty comparable and there is not much reduction in the accuracy either. Also, the early stoppig was applied when there is no change in the validation accuracy for 5 epochs and the model was saved and later pruned with the application of L1 norm.
+One thing to note here is that the numbers of parameters of Bayesian Network after applying L1 norm is not necessarily equal to the number of parameters in the frequentist AlexNet architecture. It depends on the data size and the number of classes. However, the number of parameters in the case of MNIST and CIFAR-10 are pretty comparable and there is not much reduction in the accuracy either. Also, the early stopping was applied when there is no change in the validation accuracy for 5 epochs and the model was saved and later pruned with the application of L1 norm.
 
 \section{Training Time}
 
@@ -347,7 +347,7 @@ Training time of a Bayesian \acp{cnn} is twice of a frequentist network with sim
 T = 2 * number of samples * t
 \end{align}
 where. $t$ is the training time of a frequentist network. 
-The factor of 2 is present due to the double learned paramters of the network i.e. mean and variance for every single point estimate in the frequentist networks.
+The factor of 2 is present due to the double learned parameters of the network i.e. mean and variance for every single point estimate in the frequentist networks.
 
 However, there is no difference in the inference time for both the networks. 
 
