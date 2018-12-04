@@ -87,6 +87,10 @@ The Network architecture was trained on BSD300 dataset \cite{MartinFTM01} provid
 \end{center}
 \end{figure}
 
+The generated results with Bayesian Network is compared with the original paper and the results are comparable in terms of the number and the quality of the image generated. This application was to prove the concept that the Bayesian Networks can be used for the task of Image Super Resolution. Furthermore, the results are pretty good. 
+
+Some more research is needed in the future to achieve state-of-the-art results in this domain which is out of scope of this thesis work.
+
 
 
 
@@ -94,10 +98,30 @@ The Network architecture was trained on BSD300 dataset \cite{MartinFTM01} provid
 
 Generative Adversarial Networks (GANs) \cite{goodfellow2014generative} can be used for two major tasks: to learn good feature representations by using the generator and discriminator networks as feature extractors, and to generate natural images. The learned feature representation or generated images can reduce the number of images substantially for a computer vision supervised task. However GANs were quite unstable to train in the past and that is why we base our work on the stable GAN architecture namely Deep Convolutional GANs (DCGAN) \cite{DBLP:journals/corr/RadfordMC15}. We use the trained Bayesian discriminators for image classification tasks, showing competitive performance with the normal DCGAN architecture.
 
-
-
 \subsection{Our approach}
+
+
 \subsection{Empirical Analysis}
+
+The images were taken directly and no pre-processing was applied to any of the images. Normalization was applied with value 0.5 to make the data mean centered. A batch size of 64 was used along with Adam \citep{kingma2014adam} as optimizer to speed up the training. All weights were initialized from a zero-centered Normal distribution with standard deviation equal to 1. We also used LeakyReLU as mentioned in the original DCGAN paper \cite{DBLP:journals/corr/RadfordMC15}. The slope of the leak in LeakyReLU was set to 0.2 in all models. We used the learning rate of 0.0001, whereas in paper 0.0002 was used instead. Additionally, we found leaving the momentum term $\beta_1$ at the suggested value of 0.9 resulted in training oscillation and instability while reducing it to 0.5 helped stabilize training (also taken from original paper \cite{DBLP:journals/corr/RadfordMC15}).
+
+The fake results of the generator after 100 epochs of training is shown in Figure \ref{fig:FakeSamples}. To compare the results, real samples are shown in Figure \ref{fig:RealSamples}.  
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[height=.88\textheight]{Chapter6/Figs/fake_samples.png}
+\label{fig:FakeSamples}
+\caption{Fake Samples generated from the Bayesian DCGAN model trained on CIFAR10 dataset}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[height=.88\textheight]{Chapter6/Figs/realsamples.png}
+\label{fig:RealSamples}
+\caption{Real Samples taken from CIFAR10 dataset}
+\end{center}
+\end{figure}
 
 
 
