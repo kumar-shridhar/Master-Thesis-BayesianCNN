@@ -100,6 +100,59 @@ Generative Adversarial Networks (GANs) \cite{goodfellow2014generative} can be us
 
 \subsection{Our approach}
 
+We based our work on the paper :  Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks by Radford \cite{DBLP:journals/corr/RadfordMC15}. We used the architecture of a deep convolutional generative adversarial networks (DCGANs) that learns a hierarchy of representations from object parts to scenes in both the generator and discriminator.
+The generator used in the Network is shown in Table \ref{tab:GeneratorArchitecture}. The architecture is kept similar to the architecture used in DCGAN paper \cite{DBLP:journals/corr/RadfordMC15}. Table \ref{tab:DiscriminatorArchitecture} shows the discriminator network with Bayesian Convolutional Layers. 
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{2}
+    \begin{tabular}{c c c c c} 
+ \hline
+ layer type & width & stride & padding & nonlinearity \\ [0.5ex] 
+ \hline
+ ConvolutionTranspose ($4\times4$) & ngf * 8 & 1 & 0  & ReLU \\ 
+ 
+
+ ConvolutionTranspose ($4\times4$) & ngf * 4 & 2 & 1  & ReLU \\
+ 
+ 
+ ConvolutionTranspose ($4\times4$) & ngf * 2 & 2 & 1 & ReLU \\
+ 
+ ConvolutionTranspose ($4\times4$) & ngf & 2 & 1  & ReLU \\
+ 
+ ConvolutionTranspose ($4\times4$) & nc & 2 & 1 & TanH \\ [1ex] 
+ \hline
+\end{tabular}
+\renewcommand{\arraystretch}{1}
+\caption{Generator architecture as defined in the paper. \cite{DBLP:journals/corr/RadfordMC15}}
+\label{tab:GeneratorArchitecture}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{2}
+    \begin{tabular}{c c c c c} 
+ \hline
+ layer type & width & stride & padding & nonlinearity \\ [0.5ex] 
+ \hline
+ Convolution ($4\times4$) & ndf & 2 & 1  & LeakyReLU \\ 
+ 
+
+ Convolution($4\times4$) & ndf * 2 & 2 & 1  & LeakyReLU \\
+ 
+ 
+ Convolution ($4\times4$) & ndf * 4 & 2 & 1 & LeakyReLU \\
+ 
+ Convolution ($4\times4$) & ndf * 8 & 2 & 1  & leakyReLU \\
+ 
+ ConvolutionTranspose ($4\times4$) & 1 & 1 & 0 & Sigmoid \\ [1ex] 
+ \hline
+\end{tabular}
+\renewcommand{\arraystretch}{1}
+\caption{Discriminator architecture with Bayesian Convolutional layers}
+\label{tab:DiscriminatorArchitecture}
+\end{table}
+
 
 \subsection{Empirical Analysis}
 
