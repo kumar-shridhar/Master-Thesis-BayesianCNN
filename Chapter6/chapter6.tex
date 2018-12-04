@@ -33,6 +33,8 @@ from Low Resolution inputs through a predefined mathematical formula. No trainin
 
 We build our work upon \citet{DBLP:journals/corr/ShiCHTABRW16} work that shows that performing Super Resolution work in High Resolution space is not the optimal solution and it adds the computation complexity. We used a Bayesian Convolutional Neural Network to extract features in the Low Resolution space. We use an efficient sub-pixel convolution layer, as proposed by \citet{DBLP:journals/corr/ShiCHTABRW16}, which learns an array of upscaling filters to upscale the final Low Resolution feature maps into the High Resolution output. This replaces the handcrafted bicubic filter in the Super Resolution pipeline with more complex upscaling filters specifically trained for each feature map, and also reduces the computational complexity of the overall Super Resolution operation.
 
+The hyperparamters used in the experiments is mentioned in the Appendix A section in details.
+
 \begin{figure*}[htbp]
 \begin{center}
 \includegraphics[width=1.0\linewidth]{Chapter6/Figs/networkstructure.jpg}
@@ -128,6 +130,8 @@ The generator used in the Network is shown in Table \ref{tab:GeneratorArchitectu
 \label{tab:GeneratorArchitecture}
 \end{table}
 
+where \textit{ngf} is the number of generator filters which is chosen to be 64 in our work and \textit{nc} is the number of output channels which is set to 3. 
+
 \begin{table}[H]
     \centering
     \renewcommand{\arraystretch}{2}
@@ -153,11 +157,13 @@ The generator used in the Network is shown in Table \ref{tab:GeneratorArchitectu
 \label{tab:DiscriminatorArchitecture}
 \end{table}
 
+where \textit{ndf} is the number of discriminator filters and is set to 64 as default for all our experiments. 
 
 \subsection{Empirical Analysis}
 
 The images were taken directly and no pre-processing was applied to any of the images. Normalization was applied with value 0.5 to make the data mean centered. A batch size of 64 was used along with Adam \citep{kingma2014adam} as optimizer to speed up the training. All weights were initialized from a zero-centered Normal distribution with standard deviation equal to 1. We also used LeakyReLU as mentioned in the original DCGAN paper \cite{DBLP:journals/corr/RadfordMC15}. The slope of the leak in LeakyReLU was set to 0.2 in all models. We used the learning rate of 0.0001, whereas in paper 0.0002 was used instead. Additionally, we found leaving the momentum term $\beta_1$ at the suggested value of 0.9 resulted in training oscillation and instability while reducing it to 0.5 helped stabilize training (also taken from original paper \cite{DBLP:journals/corr/RadfordMC15}).
 
+The hyperparamters used in the experiments is mentioned in the Appendix A section in details.
 The fake results of the generator after 100 epochs of training is shown in Figure \ref{fig:FakeSamples}. To compare the results, real samples are shown in Figure \ref{fig:RealSamples}.  
 
 \begin{figure}[H]
