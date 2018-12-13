@@ -248,7 +248,7 @@ In Figure \ref{fig:regularization}, we show how Bayesian networks incorporate na
     \label{tab:uncertainty}
 \end{table}
 
-\section{Model Pruning}
+\section{Model pruning}
 
 \subsubsection{Halving the NUmber of Filters}
 
@@ -340,7 +340,7 @@ L1 norm induces sparsity in the trained model parameters and sets some values to
 
 One thing to note here is that the numbers of parameters of Bayesian Network after applying L1 norm is not necessarily equal to the number of parameters in the frequentist AlexNet architecture. It depends on the data size and the number of classes. However, the number of parameters in the case of MNIST and CIFAR-10 are pretty comparable and there is not much reduction in the accuracy either. Also, the early stopping was applied when there is no change in the validation accuracy for 5 epochs and the model was saved and later pruned with the application of L1 norm.
 
-\section{Training Time}
+\section{Training time}
 
 Training time of a Bayesian \acp{cnn} is twice of a frequentist network with similar architecture when the number of samples is equal to one. In general, the training time of a Bayesian \acp{cnn}, $T$ is defined as:
 \begin{align}
