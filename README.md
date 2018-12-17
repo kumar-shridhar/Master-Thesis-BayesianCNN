@@ -24,8 +24,6 @@ In this thesis, **Bayesian Convolutional Neural Network (BayesCNN) using Variati
 
 BayesCNN is based on **Bayes by Backprop** which derives a variational approximation to the true posterior. 
 Our proposed method not only achieves performances equivalent to frequentist inference in identical architectures but also incorporate a measurement for uncertainties and regularisation. It further eliminates the use of dropout in the model. Moreover, we predict how certain the model prediction is based on the epistemic and aleatoric uncertainties and finally, we propose ways to prune the Bayesian architecture and to make it more computational and time effective. 
-\newline
-
 
 In the first part of the thesis, the Bayesian Neural Network is explained and it is applied to an Image Classification task. The results are compared to point-estimates based architectures on MNIST, CIFAR-10, CIFAR-100 and STL-10 datasets. Moreover, uncertainties are calculated and the architecture is pruned and a comparison between the results is drawn.
 
