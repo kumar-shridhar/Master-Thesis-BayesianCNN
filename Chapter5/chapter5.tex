@@ -6,9 +6,9 @@
         Chapter Overview
         \begin{itemize}
             \item Applying Bayesian \acp{cnn} for the task of Image Recognition on MNIST, CIFAR-10, CIFAR-100 and STL-10 datasets.
-            \item Comparison of results of Bayesian \acp{CNN} with Normal \acp{cnn} architectures on similar datasets.
+            \item Comparison of results of Bayesian \acp{cnn} with Normal \ac{cnn} architectures on similar datasets.
             \item Regularization effect of Bayesian Network with dropouts.
-            \item Distribution of mean and variance in Bayesian \acp{cnn} over time. 
+            \item Distribution of mean and variance in Bayesian \ac{cnn} over time. 
             \item Parameters comparison before and after model pruning. 
         \end{itemize}
     }
@@ -34,32 +34,17 @@ where $\beta$ is by default set to $1$.
 For all conducted experiments, we implement the foregoing description of Bayesian \acp{cnn} with variational inference in LeNet-5 \cite{lecun1998gradient} and AlexNet \cite{krizhevsky2012imagenet}. The exact architecture specifications can be found in the Appendix and in our GitHub repository\footnote{\url{https://github.com/kumar-shridhar/PyTorch-BayesianCNN}}.
 
 \subsubsection{Objective Function}
-TO learn the objective function, we use \textit{Bayes by Backprop} \cite{graves2011practical, blundell2015weight}, which is a variational inference method to learn the posterior distribution on the weights $w \sim q_{\theta}(w|\mathcal{D})$ of a neural network from which weights $w$ can be sampled in backpropagation. 
+To learn the objective function, we use \textit{Bayes by Backprop} \cite{graves2011practical, blundell2015weight}, which is a variational inference method to learn the posterior distribution on the weights $w \sim q_{\theta}(w|\mathcal{D})$ of a neural network from which weights $w$ can be sampled in backpropagation. 
 It regularises the weights by minimising a compression cost, known as the variational free energy or the expected lower bound on the marginal likelihood.
 
-Since the true posterior is typically intractable, an approximate distribution $q_{\theta}(w|\mathcal{D})$ is defined that is aimed to be as similar as possible to the true posterior $p(w|\mathcal{D})$, measured by the Kullback-Leibler (KL) divergence \cite{kullback1951information}. Hence, we define the optimal parameters $\theta^{opt}$ as
-\begin{equation}
-    \begin{aligned} \label{KL}
-        \theta^{opt}&=\underset{\theta}{\text{arg min}}\ \text{KL} \ [q_{\theta}(w|\mathcal{D})\|p(w|\mathcal{D})] \\
-        &=\underset{\theta}{\text{arg min}}\ \text{KL} \ [q_{\theta}(w|\mathcal{D})\|p(w)] \\ & -\mathbb{E}_{q(w|\theta)}[\log p(\mathcal{D}|w)]+\log p(\mathcal{D})
-    \end{aligned}
-\end{equation}
-
-where
-\begin{equation}
-    \text{KL} \ [q_{\theta}(w|\mathcal{D})\|p(w)]= \int q_{\theta}(w|\mathcal{D})\log\frac{q_{\theta}(w|\mathcal{D})}{p(w)}dw .
-\end{equation}
-This derivation forms an optimisation problem with a resulting cost function widely known as \textit{variational free energy} \cite{neal1998view,yedidia2005constructing,friston2007variational} which is built upon two terms: the former, $\text{KL} \ [q_{\theta}(w|\mathcal{D})\|p(w)]$, is dependent on the definition of the prior $p(w)$, thus called complexity cost, whereas the latter, $\mathbb{E}_{q(w|\theta)}[\log p(\mathcal{D}|w)]$, is dependent on the data $p(\mathcal{D}|w)$, thus called likelihood cost. 
-The term $\log p(\mathcal{D})$ can be omitted in the optimisation because it is constant.
-\newline Since the KL-divergence is also intractable to compute exactly, we follow a stochastic variational method \cite{graves2011practical,blundell2015weight}.
-We sample the weights $w$ from the variational distribution $q_{\theta}(w|\mathcal{D})$ since it is much more probable to draw samples which are appropriate for numerical methods from the variational posterior $q_{\theta}(w|\mathcal{D})$ than from the true posterior $p(w|\mathcal{D})$. Consequently, we arrive at the tractable cost function \eqref{cost} which is aimed to be optimized, i.e. minimised w.r.t. $\theta$, during training:
+ We tackled the problem of intractability in Chapter 2 and consequently, we arrive at the tractable cost function \eqref{cost} which is aimed to be optimized, i.e. minimised w.r.t. $\theta$, during training:
 \begin{equation} \label{cost}
     \mathcal{F}(\mathcal{D}, \theta)\approx \sum_{i=1}^n \log q_{\theta}(w^{(i)}|\mathcal{D})-\log p(w^{(i)})-\log p(\mathcal{D}|w^{(i)})
 \end{equation}
 %
 where $n$ is the number of draws.
 
-Let's break the Objective Function in \eqref{cost} and discuss in more details. 
+Let's break the Objective Function \eqref{cost} and discuss in more details. 
 \subsubsection{Variational Posterior }
 
 The first term in the equation \eqref{cost} is the variational posterior. The variational posterior is taken as Gaussian distribution centred around mean $\mu$ and variance as $\sigma^2$. 
@@ -96,15 +81,17 @@ The final term of the equation \eqref{cost} $\log p(\mathcal{D}|w^{(i)})$ is the
 
 We use a Gaussian distribution and we store mean and variance values instead of just one weight. The way mean $\mu$ and variance $\sigma$ is computed is defined in the previous chapter. Variance cannot be negative and it is ensured by using \textit{softplus} as the activation function. We express variance $\sigma$ as $\sigma_{i}=softplus(\rho_{i})$ where $\rho$ is an unconstrained parameter. \\
 
-We take the Gaussian distribution and initialize mean $\mu$ as 0 and variance $\sigma$ (and hence $\rho$) as very small number. We perform gradient descent over $\theta$ = ($\mu$, $\rho$), and individual weight $w_{i} \sim \mathcal{N} (w_{i} | \mu_{i}, \sigma_{i}$).  
+We take the Gaussian distribution and initialize mean $\mu$ as 0 and variance $\sigma$ (and hence $\rho$) randomly. We observed mean centred around 0 and a variance starting with a big number and gradually decreasing over time. A good initialization can also be to put a restriction on variance and initialize it small. However, it might be data dependent and a good method for variance initialization is still to be discovered. We perform gradient descent over $\theta$ = ($\mu$, $\rho$), and individual weight $w_{i} \sim \mathcal{N} (w_{i} | \mu_{i}, \sigma_{i}$).  
 
 \subsubsection{Optimizer}
 
-For all our tasks, we take Adam optimizer \cite{KingmaB14} to optimize the parameters. We also perform the local reparameterization trick as mentioned in the previous section and take the gradient of the combined loss function with respect to the variational parameters ($\mu$, $\rho$).
+For all our tasks, we take Adam optimizer \cite{kingma2014adam} to optimize the parameters. We also perform the local reparameterization trick as mentioned in the previous section and take the gradient of the combined loss function with respect to the variational parameters ($\mu$, $\rho$).
 
 \subsubsection{Model Pruning}
 
-We take the weights of all the layers of the network, apply an L1 norm over it and for all the weights value as 0 are removed and the model is pruned. \\ Also, since the Bayesian \acp{cnn} has twice the number of parameters ($\mu$, $\sigma$) compared to a frequentist network (only 1 weight), we reduce the size of our network to half (AlexNet and LeNet- 5) by reducing the number of filters to half. The architecture used is mentioned in the last section of this chapter.
+We take the weights of all the layers of the network, apply an L1 norm over it and for all the weights value as zero or below a defined threshold are removed and the model is pruned. \\ Also, since the Bayesian \acp{cnn} has twice the number of parameters ($\mu$, $\sigma$) compared to a frequentist network (only 1 weight), we reduce the size of our network to half (AlexNet and LeNet- 5) by reducing the number of filters to half. The architecture used is mentioned in the Appendix.
+
+\textit{Please note that it can be argued that the reducing the number of filters to be half is a method for pruning or not. It can be seen as a method that reduces the number of overall parameters and hence can be thought of a pruning method in some sense. However, it is a subject to argument.} 
 
 \section{Case Study 1: Small Datasets (MNIST, CIFAR-10)}
 
@@ -179,7 +166,7 @@ We compare the results of these two approaches to frequentist inference approach
 \end{center}
 \end{figure} 
 
-\newline Figure \ref{fig:distribution} displays the convergence of the Gaussian variational probability distribution of a weight taken randomly from the first layer of LeNet-5 architecture. The architecture is trained on CIFAR-10 with a 
+\newline Figure \ref{fig:distribution} displays the convergence of the Gaussian variational probability distribution of a weight taken randomly from the first layer of LeNet-5 architecture. The architecture is trained on CIFAR-10 dataset with uniform initialization. 
 
 
 
@@ -214,22 +201,50 @@ This dataset is similar to the CIFAR-10 and is a labelled subset of the 80 milli
     \label{tab:resultsCIFAR-100}
 \end{table}
 
+In Figure \ref{fig:regularization}, we show how Bayesian networks incorporate naturally effects of regularization, exemplified on AlexNet. While an AlexNet trained by frequentist inference without any regularization overfits greatly on CIFAR-100, an AlexNet trained by Bayesian inference on CIFAR-100 does not. This is evident from the high value of training accuracy for frequentist approach with no dropout or 1 layer droput. Bayesian CNN performs equivalently to an AlexNet trained by frequentist inference with three layers of Dropout after the first, fourth, and sixth layers in the architecture.
+Another thing to note here is that the Bayesian CNN with 100 samples overfits slightly lesser compared to Bayesian CNN with 25 samples. However, a higher sampling number on a smaller dataset didn't proved useful and we sticked with 25 as number of samples for all other experiments.
 
-
-In Figure \ref{fig:regularization}, we show how Bayesian networks incorporate naturally effects of regularization, exemplified on AlexNet. While an AlexNet trained by frequentist inference without any regularization overfits greatly on CIFAR-100, an AlexNet trained by Bayesian inference on CIFAR-100 does not. It performs equivalently to an AlexNet trained by frequentist inference with three layers of Dropout after the first, fourth, and sixth layers in the architecture.
 
 \begin{figure}[H] 
 \begin{center}
-\includegraphics[width=\linewidth]{Chapter5/Figs/results_regularization.png}
+\includegraphics[width=\linewidth]{Chapter5/Figs/results_train_test_cifar100.png}
 \caption{Comparison of Training and Validation Accuracies of Bayesian AlexNet and LeNet-5 with frequentist approach with and without dropouts on CIFAR-100 datasets}
 \label{fig:regularization}
 \end{center}
 \end{figure} 
 
+Table \ref{tab:tableCIFAR100} shows a comparison of the training and validation accuracies for AlexNet with Bayesian approach and frequentist approach. The low gap between the traning and validation accuracies shows the robustness of Bayesian approach towards overfitting and shows how Bayesian approach without being regularized overfits lesser as compared to frequentist architecture with no or one dropout layer. The results are comparable with AlexNet architecture with 3 dropout layers.
+
+
+\begin{table}[H]
+\tiny
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \resizebox{\linewidth}{!}{
+    \begin{tabular}{ l  c  c  c  c } 
+     \hline
+      \empty & Training Accuracy & Validation Accuracy   \\ [0.75ex]
+     \hline
+     Frequentist AlexNet (No dropout) & 83 & 38   \\
+     
+     Frequentist AlexNet (1 dropout layer) & 72 & 40   \\
+     
+      Frequentist AlexNet (3 dropout layer) & 39 & 38   \\
+     \hdashline
+     Bayesian AlexNet (25 num of samples) & 54 & 37   \\
+     
+     Bayesian AlexNet (100 num of samples) & 48 & 37   \\
+     \hline \\
+    \end{tabular}}
+    \renewcommand{\arraystretch}{1.5}
+    \caption{Comparison of training and validation accuracies (in percentage) for AlexNet architecture with variational inference (VI) and frequentist inference for CIFAR-100.}
+    \label{tab:tableCIFAR100}
+\end{table}
+
 \section{Uncertainity estimation}
 
 \newline Finally, Table \ref{tab:uncertainty} compares the means of aleatoric and epistemic uncertainties for a Bayesian LeNet-5 with variational inference on MNIST and CIFAR-10. The aleatoric uncertainty of CIFAR-10 is about twenty times as large as that of MNIST. Considering that the aleatoric uncertainty measures the irreducible variability and depends on the predicted values, a larger aleatoric uncertainty for CIFAR-10 can be directly deduced from its lower validation accuracy and may be further due to the smaller number of training examples. The epistemic uncertainty of CIFAR-10 is about fifteen times larger than that of MNIST, which we anticipated since epistemic uncertainty decreases proportionally to validation accuracy. 
-\begin{table}[t!]
+\begin{table}[H]
 \tiny
     \centering
     \renewcommand{\arraystretch}{1.5}
@@ -250,7 +265,7 @@ In Figure \ref{fig:regularization}, we show how Bayesian networks incorporate na
 
 \section{Model pruning}
 
-\subsubsection{Halving the NUmber of Filters}
+\subsubsection{Halving the Number of Filters}
 
 For every parameter for a frequentist inference network, Bayesian \acp{cnn} has two parameters ($\mu$, $\sigma$). Halving the number of parameters of Bayesian AlexNet ensures the number of parameters of it is comparable with a frequentist inference network. The number of filters of ALexNet are halved and a new architecture called AlexNetHalf is defined in Figure 5.4. 
 
@@ -286,8 +301,8 @@ For every parameter for a frequentist inference network, Bayesian \acp{cnn} has 
 \end{table}
 
 
-The AlexNetHalf architecture was trained and validated on the MNIST and CIFAR10 and CIFAR100 dataset and the results are shown in Table \ref{tab:resultsAlexNetHalf}. The accuracy of pruned AlexNet with only half the number of filters compared to the normal architecture shows an accuracy gain of 6 per cent in case of CIFAR10 and equivalent performance for MNIST dataset. Lesser filters learn the most important features which proved better at inter-class classification is one of the explanations for it. Upon visualization of the filters, no distinct clarification can be made to prove the previous statement.  
-Another possible explanation could be the model is fitting perfectly after reducing the number of filters ensuring the model is not overfitting and validation accuracy is comparatively higher. CIFAR-100 higher validation accuracy on ALexNetHalf and a lower training accuracy than Bayesian AlexNet proves the theory. Using a lesser number of filters further enhances the regularization effect and makes the model more robust against overfitting. Similar results have been achieved by Narang \cite{DBLP:journals/corr/NarangDSE17} in his work where a pruned model achieved better accuracy compared to the original architecture in a speech recognition task. Suppressing or removing the weights that have lesser or no contribution to the prediction makes the model rely its prediction on the most prominent and unique features and hence improves the prediction accuracy.
+The AlexNetHalf architecture was trained and validated on the MNIST, CIFAR10 and CIFAR100 dataset and the results are shown in Table \ref{tab:resultsAlexNetHalf}. The accuracy of pruned AlexNet with only half the number of filters compared to the normal architecture shows an accuracy gain of 6 per cent in case of CIFAR10 and equivalent performance for MNIST and CIFAR100 datasets. Lesser number of filters learn the most important features which proved better at inter-class classification could be one of the explanations for the rise in accuracy. However, upon visualization of the filters, no distinct clarification can be made to prove the previous statement. \\ 
+Another possible explanation could be the model is generalizing better after the reduction in the number of filters ensuring the model is not overfitting and validation accuracy is comparatively higher. CIFAR-100 higher validation accuracy on ALexNetHalf and a lower training accuracy than Bayesian AlexNet proves the theory. Using lesser number of filters further enhances the regularization effect and makes the model more robust against overfitting. Similar results have been achieved by Narang \cite{DBLP:journals/corr/NarangDSE17} in his work where a pruned model achieved better accuracy compared to the original architecture in a speech recognition task. Suppressing or removing the weights that have lesser or no contribution to the prediction makes the model rely its prediction on the most prominent and unique features and hence improves the prediction accuracy.
 
 \begin{table}[H]
 \tiny
@@ -314,7 +329,7 @@ Another possible explanation could be the model is fitting perfectly after reduc
 \subsubsection{Applying L1 Norm}
 
 
-L1 norm induces sparsity in the trained model parameters and sets some values to zero. We remove the zero-valued parameters and keep the non-zero parameters for a trained Bayesian AlexNet on MNIST and CIFAR-10 datasets. We remove half of the parameters to make the number of parameters in a Bayesian Network equal to the number of parameters in the point-estimate architecture. \\ Table \ref{tab:resultsL1Norm} shows the comparison of validation accuracies of the applied L1 Norm AlexNet Bayesian architecture with Bayesian AlexNet architecture and with AlexNet frequentist architecture. 
+L1 norm induces sparsity in the trained model parameters and sets some values to zero. We trained a model to some epochs (number of epochs differs across datasets as we applied early stopping when validation accuracy remians unchanged for 5 epochs). We removed the zero-valued parameters of the learned weights and keep the non-zero parameters for a trained Bayesian AlexNet on MNIST and CIFAR-10 datasets. We pruned the model to make the number of parameters in a Bayesian Network comparable to the number of parameters in the point-estimate architecture. \\ Table \ref{tab:resultsL1Norm} shows the comparison of validation accuracies of the applied L1 Norm AlexNet Bayesian architecture with Bayesian AlexNet architecture and with AlexNet frequentist architecture. We got a comparable results on MNIST and CIFAR10 with the experiments and the results are shown in Table \ref{tab:resultsL1Norm}
 
 \begin{table}[H]
 \tiny
@@ -346,8 +361,8 @@ Training time of a Bayesian \acp{cnn} is twice of a frequentist network with sim
 \begin{align}
 T = 2 * number of samples * t
 \end{align}
-where. $t$ is the training time of a frequentist network. 
-The factor of 2 is present due to the double learned parameters of the network i.e. mean and variance for every single point estimate in the frequentist networks.
+where, $t$ is the training time of a frequentist network. 
+The factor of 2 is present due to the double learnable parameters in a Bayesian CNN network i.e. mean and variance for every single point estimate weight in the frequentist network.
 
 However, there is no difference in the inference time for both the networks. 
 

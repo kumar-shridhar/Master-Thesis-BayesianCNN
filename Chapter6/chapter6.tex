@@ -17,16 +17,16 @@
 
 \section{BayesCNN for Image Super Resolution}
 
-The task referred to as Super Resolution is the recovery of a High-Resolution image from a given Low-Resolution image. It is applicable to many areas like medical imaging \citet{10.1007/978-3-642-40760-4_2}, face recognition \citet{1203152} and so on.
+The task referred to as Super Resolution (SR) is the recovery of a High-Resolution (HR) image from a given Low-Resolution (LR) image. It is applicable to many areas like medical imaging \citet{10.1007/978-3-642-40760-4_2}, face recognition \citet{1203152} and so on.
 
 There are many ways to do a single image super-resolution and detailed benchmarks of the methods are provided by Yang \citet{Yang2014SingleImageSA}. Following are the major ways to do a single image super-resolution:\\ 
 
 \textbf{Prediction Models}: These models generate High-Resolution images
 from Low-Resolution inputs through a predefined mathematical formula. No training data is needed for such models. Interpolation-based methods (bilinear, bicubic, and Lanczos) generate HR pixel intensities by weighted averaging neighbouring LR pixel values are good examples of this method.\\
 
-\textbf{Edge Based Methods}: Edges are one of the most important features for any computer vision task. The High-Resolution Images learned from the edge features high-quality edges and good sharpness. However, these models lack good colour and texture information.\\
+\textbf{Edge Based Methods}: Edges are one of the most important features for any computer vision task. The High-Resolution images learned from the edge features high-quality edges and good sharpness. However, these models lack good colour and texture information.\\
 
-\textbf{Patch Based Methods}: Cropped patches from Low-Resolution Images and High-Resolution Images are taken from training dataset to learn some mapping function. The overlapped patches are averaged or some other techniques like Conditional Random Fields \citet{lafferty2001conditional} can be used for better mapping of the patches.  
+\textbf{Patch Based Methods}: Cropped patches from Low-Resolution images and High-Resolution images are taken from training dataset to learn some mapping function. The overlapped patches are averaged or some other techniques like Conditional Random Fields \cite{lafferty2001conditional} can be used for better mapping of the patches.  
 
 
 \subsection{Our Approach}
@@ -100,7 +100,7 @@ Generative Adversarial Networks (GANs) \cite{goodfellow2014generative} can be us
 
 \subsection{Our approach}
 
-We based our work on the paper:  Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks by Radford \cite{DBLP:journals/corr/RadfordMC15}. We used the architecture of a deep convolutional generative adversarial networks (DCGANs) that learns a hierarchy of representations from object parts to scenes in both the generator and discriminator.
+We based our work on the paper:  Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks by  \citet{DBLP:journals/corr/RadfordMC15}. We used the architecture of a deep convolutional generative adversarial networks (DCGANs) that learns a hierarchy of representations from object parts to scenes in both the generator and discriminator.
 The generator used in the Network is shown in Table \ref{tab:GeneratorArchitecture}. The architecture is kept similar to the architecture used in DCGAN paper \cite{DBLP:journals/corr/RadfordMC15}. Table \ref{tab:DiscriminatorArchitecture} shows the discriminator network with Bayesian Convolutional Layers. 
 
 \begin{table}[H]
@@ -162,7 +162,7 @@ where \textit{ndf} is the number of discriminator filters and is set to 64 as de
 The images were taken directly and no pre-processing was applied to any of the images. Normalization was applied with value 0.5 to make the data mean centred. A batch size of 64 was used along with Adam \citep{kingma2014adam} as an optimizer to speed up the training. All weights were initialized from a zero-centred Normal distribution with standard deviation equal to 1. We also used LeakyReLU as mentioned in the original DCGAN paper \cite{DBLP:journals/corr/RadfordMC15}. The slope of the leak in LeakyReLU was set to 0.2 in all models. We used the learning rate of 0.0001, whereas in paper 0.0002 was used instead. Additionally, we found leaving the momentum term $\beta_1$ at the suggested value of 0.9 resulted in training oscillation and instability while reducing it to 0.5 helped stabilize training (also taken from original paper \cite{DBLP:journals/corr/RadfordMC15}).
 
 The hyperparameters used in the experiments is mentioned in the Appendix A section in details.
-The fake results of the generator after 100 epochs of training is shown in Figure \ref{fig:FakeSamples}. To compare the results, real samples are shown in Figure \ref{fig:RealSamples}. The loss in case of a Bayesian network is higher as compared to the DCGAN architecture originally described by the authors. However, upon looking at the results, there are no comparison that can be drawn from the results of the two networks. Since GANs are difficult to anticipate just by the loss number, the comparison cannot be made. The results are pretty comparable for the Bayesian models and the original DCGAN architecture. 
+The fake results of the generator after 100 epochs of training is shown in Figure 6.4. To compare the results, real samples are shown in Figure 6.5. The loss in case of a Bayesian network is higher as compared to the DCGAN architecture originally described by the authors. However, upon looking at the results, there are no comparison that can be drawn from the results of the two networks. Since GANs are difficult to anticipate just by the loss number, the comparison cannot be made. The results are pretty comparable for the Bayesian models and the original DCGAN architecture. 
 
 \begin{figure}[H]
 \begin{center}
