@@ -6,7 +6,7 @@ Master Thesis: Bayesian Convolutional Neural Networks
 [![License MIT](http://img.shields.io/badge/license-MIT-brightgreen.svg)](license.md)
 
 ## Author
-*   Kumar Shridhar
+*   [Kumar Shridhar](https://kumar-shridhar.github.io/)
 
 ## Supervisors
 *   Prof. Marcus Liwicki (Professor at Luleå Unoversity, Sweden)
@@ -128,4 +128,10 @@ The proposed work has been implemented in PyTorch and is available here : [Bayes
 *   Cambridge Computer Laboratory PhD Thesis Template [https://github.com/cambridge/thesis](https://github.com/cambridge/thesis)
 
 ----------------------------------------------------------------------------------------------------------
+
+### Contact
+
+*   shridhar.stark@gmail.com
+
+---------------------------------------------------------------------------------------------------------
 
