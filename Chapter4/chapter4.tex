@@ -42,14 +42,14 @@ In this section, we explain our algorithm of building a \ac{cnn} with probabilit
 \centering
 \includegraphics[width=\linewidth]{Chapter4/Figs/CNNwithdist.png}
 \end{minipage}
-\caption{Input image with exemplary pixel values, filters, and corresponding output with point-estimates (top) and probability distributions (bottom) over weights.}
+\caption{Input image with exemplary pixel values, filters, and corresponding output with point-estimates (top) and probability distributions (bottom) over weights.\cite{shridhar2018bayesian}}
 \label{fig:filter_scalar}
 \end{figure} 
 %
 \begin{figure}[b!] 
 \begin{center}
 \includegraphics[width=\linewidth]{Chapter4/Figs/CNNwithdist_grey.png}
-\caption{Fully Bayesian perspective of an exemplary CNN. Weights in filters of convolutional layers, and weights in fully-connected layers have the form of a probability distribution.}
+\caption{Fully Bayesian perspective of an exemplary CNN. Weights in filters of convolutional layers, and weights in fully-connected layers have the form of a probability distribution. \cite{shridhar2018bayesian}}
 \label{fig:CNNwithdist_grey}
 \end{center}
 \end{figure} 
@@ -94,7 +94,25 @@ This quantity can be decomposed into the aleatoric and epistemic uncertainty \ci
     \end{aligned}
 \end{equation}
 where $\Bar{p} = \frac{1}{T}\sum_{t=1}^T \hat{p}_t$ and $\hat{p}_t = \text{Softmax}\big ( f_{w_{t}}(x^*) \big )$.
-\newline It is of paramount importance that uncertainty is split into aleatoric and epistemic quantities since it allows the modeler to evaluate the room for improvements: while aleatoric uncertainty (also known as statistical uncertainty) is merely a measure for the variation of ("noisy") data, epistemic uncertainty is caused by the model. Hence, a modeler can see whether the quality of the data is low (i.e. high aleatoric uncertainty), or the model itself is the cause for poor performances (i.e. high epistemic uncertainty). The former cannot be improved by gathering more data, whereas the latter can be done so. \cite{der2009aleatory} \cite{kendall2017uncertainties}.
+
+\begin{figure}[H] 
+\centering
+\begin{minipage}{.4\textwidth}
+\centering
+\includegraphics[width=\linewidth]{Chapter4/Figs/det.pdf}
+\end{minipage}
+%
+\begin{minipage}{.4\textwidth}
+\centering
+\includegraphics[width=\linewidth]{Chapter4/Figs/bbb.pdf}
+\end{minipage}
+\caption{Predictive distributions is estimated for a low-dimensional active learning task. The predictive distributions are visualized as mean and two standard deviations shaded. \textcolor{blue}{$\blacksquare$} shows the epistemic uncertainty and \textcolor{red}{$\blacksquare$} shows the aleatoric noise. Data points are shown in \textcolor{grey}{$\blacksquare$}.
+\textbf{(Left)} A deterministic network conflates uncertainty as part of the noise and is overconfident outside of the data distribution.
+\textbf{(Right)} A variational Bayesian neural network with standard normal prior represents uncertainty and noise separately but is overconfident outside of the training distribution as defined by \cite{hafner2018reliable}}
+\label{fig:filter_scalar}
+\end{figure} 
+
+\newline It is of paramount importance that uncertainty is split into aleatoric and epistemic quantities since it allows the modeler to evaluate the room for improvements: while aleatoric uncertainty (also known as statistical uncertainty) is merely a measure for the variation of ("noisy") data, epistemic uncertainty is caused by the model. Hence, a modeler can see whether the quality of the data is low (i.e. high aleatoric uncertainty), or the model itself is the cause for poor performances (i.e. high epistemic uncertainty). The former cannot be improved by gathering more data, whereas the latter can be done so. \cite{Kiureghian} \cite{kendall2017uncertainties}.
 
 \section{Model pruning}
 
