@@ -134,7 +134,7 @@ with respect to the variational parameters defining $q(w)$. This is known as \te
 Maximizing the KL divergence between the posterior and the prior over $w$ will result in a variational distribution that learns a good representation from the data (obtained from log likelihood) and is closer to the prior distribution. In other words, it can prevent overfitting. 
 
 
-\subsection{Local  reparametrisation  trick}
+\subsection{Local  Reparametrisation  Trick}
 The ability to rewrite statistical problems in an equivalent but different form, to reparameterise them, is one of the most general-purpose tools used in mathematical statistics. The type of \textit{reparameterization} when the global uncertainty in the weights is translated into a form of local uncertainty which is independent across examples is known as the \emph{local reparameterization trick}. 
 An alternative estimator is deployed for which $\Cov{}{L_{i},L_{j}} = 0$, so that the variance of the stochastic gradients scales as $1/M$.
 The new estimator is made computationally efficient by sampling the intermediate variables and not sampling $\beps$ directly, but only  $f(\beps)$ through which $\beps$ influences $L_\D^\text{SGVB}(\bphi)$. Hence, the source of global noise can be translated to local noise ($\beps \rightarrow f(\beps)$), a local reparameterization can be applied so as to obtain a statistically efficient gradient estimator.
@@ -207,7 +207,7 @@ We sample the weights $w$ from the variational distribution $q_{\theta}(w|\mathc
 where $n$ is the number of draws.
 \newline We sample $w^{(i)}$ from $q_{\theta}(w|\mathcal{D})$. The uncertainty afforded by \textit{Bayes by Backprop} trained neural networks has been used successfully for training feedforward neural networks in both supervised and reinforcement learning environments \cite{blundell2015weight,lipton2016efficient,houthooft2016curiosity}, for training recurrent neural networks \cite{fortunato2017bayesian}, but has not been applied to convolutional neural networks to-date.
 
-\section{Model weights pruning}
+\section{Model Weights Pruning}
 
 Model pruning reduces the sparsity in a deep neural network's
 various connection matrices, thereby reducing the number of valued parameters in the model. The whole idea of model pruning is to reduce the number of parameters without much loss in the accuracy of the model. This reduces the use of a large parameterized model with regularization and promotes the use of dense connected smaller models. Some recent work suggests \cite{DBLP:journals/corr/HanMD15} \cite{DBLP:journals/corr/NarangDSE17} that the network can achieve a sizable reduction in model size, yet achieving comparable accuracy. 

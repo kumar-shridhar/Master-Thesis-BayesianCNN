@@ -29,7 +29,7 @@
 
 \section{Related Work}
 
-\subsection{Bayesian training}
+\subsection{Bayesian Training}
 Applying Bayesian methods to neural networks has been studied in the past with various approximation methods for the intractable true posterior probability distribution $p(w|\mathcal{D})$. Buntine and Weigend \cite{buntine1991bayesian} started to propose various \textit{maximum-a-posteriori} (MAP) schemes for neural networks. They were also the first who suggested second order derivatives in the prior probability distribution $p(w)$ to encourage smoothness of the resulting approximate posterior probability distribution.
 In subsequent work by Hinton and Van Camp \cite{hinton1993keeping}, the first variational methods were proposed which naturally served as a regularizer in neural networks. He also mentioned that the amount of information in a weight can be controlled by adding Gaussian noise. When optimizing the trade-off between the expected error and the information in the weights, the noise level can be adapted during learning.
 
@@ -46,7 +46,7 @@ A more scalable solution based on expectation propagation was proposed by Soudry
 \newline Several authors have claimed that Dropout \cite{srivastava2014dropout} and Gaussian Dropout \cite{wang2013fast} can be viewed as approximate variational inference schemes \cite{gal2015bayesian, kingma2015variational}. We compare our results to Gal's \& Ghahramani's \cite{gal2015bayesian} and discuss the methodological differences in detail.
 
 
-\subsection{Uncertainties estimation}
+\subsection{Uncertainty Estimation}
 
 Neural Networks can predict uncertainty when Bayesian methods are introduced in it. An attempt to model uncertainty has been studied from 1990s \cite{neal2012bayesian} but has not been applied successfully until 2015. Gal and Ghahramani \cite{Gal2015Dropout} in 2015 provided a theoretical framework for modelling Bayesian uncertainty. Gal and Ghahramani \cite{gal2015bayesian} obtained the uncertainty estimates by casting dropout training in conventional deep networks as a Bayesian approximation of a Gaussian Process. They showed that any network trained with dropout is an approximate Bayesian model, and uncertainty estimates can be obtained by computing the variance on multiple predictions with different dropout masks.
 
