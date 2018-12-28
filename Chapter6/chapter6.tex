@@ -98,7 +98,7 @@ Some more research is needed in the future to achieve state-of-the-art results i
 
 Generative Adversarial Networks (GANs) \cite{goodfellow2014generative} can be used for two major tasks: to learn good feature representations by using the generator and discriminator networks as feature extractors and to generate natural images. The learned feature representation or generated images can reduce the number of images substantially for a computer vision supervised task. However, GANs were quite unstable to train in the past and that is why we base our work on the stable GAN architecture namely Deep Convolutional GANs (DCGAN) \cite{DBLP:journals/corr/RadfordMC15}. We use the trained Bayesian discriminators for image classification tasks, showing competitive performance with the normal DCGAN architecture.
 
-\subsection{Our approach}
+\subsection{Our Approach}
 
 We based our work on the paper:  Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks by  \citet{DBLP:journals/corr/RadfordMC15}. We used the architecture of a deep convolutional generative adversarial networks (DCGANs) that learns a hierarchy of representations from object parts to scenes in both the generator and discriminator.
 The generator used in the Network is shown in Table \ref{tab:GeneratorArchitecture}. The architecture is kept similar to the architecture used in DCGAN paper \cite{DBLP:journals/corr/RadfordMC15}. Table \ref{tab:DiscriminatorArchitecture} shows the discriminator network with Bayesian Convolutional Layers. 

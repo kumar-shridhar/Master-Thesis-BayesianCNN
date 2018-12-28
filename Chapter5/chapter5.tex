@@ -241,7 +241,7 @@ Table \ref{tab:tableCIFAR100} shows a comparison of the training and validation 
     \label{tab:tableCIFAR100}
 \end{table}
 
-\section{Uncertainity estimation}
+\section{Uncertainity Estimation}
 
 \newline Finally, Table \ref{tab:uncertainty} compares the means of aleatoric and epistemic uncertainties for a Bayesian LeNet-5 with variational inference on MNIST and CIFAR-10. The aleatoric uncertainty of CIFAR-10 is about twenty times as large as that of MNIST. Considering that the aleatoric uncertainty measures the irreducible variability and depends on the predicted values, a larger aleatoric uncertainty for CIFAR-10 can be directly deduced from its lower validation accuracy and may be further due to the smaller number of training examples. The epistemic uncertainty of CIFAR-10 is about fifteen times larger than that of MNIST, which we anticipated since epistemic uncertainty decreases proportionally to validation accuracy. 
 \begin{table}[H]
@@ -263,7 +263,7 @@ Table \ref{tab:tableCIFAR100} shows a comparison of the training and validation 
     \label{tab:uncertainty}
 \end{table}
 
-\section{Model pruning}
+\section{Model Pruning}
 
 \subsubsection{Halving the Number of Filters}
 
@@ -355,11 +355,11 @@ L1 norm induces sparsity in the trained model parameters and sets some values to
 
 One thing to note here is that the numbers of parameters of Bayesian Network after applying L1 norm is not necessarily equal to the number of parameters in the frequentist AlexNet architecture. It depends on the data size and the number of classes. However, the number of parameters in the case of MNIST and CIFAR-10 are pretty comparable and there is not much reduction in the accuracy either. Also, the early stopping was applied when there is no change in the validation accuracy for 5 epochs and the model was saved and later pruned with the application of L1 norm.
 
-\section{Training time}
+\section{Training Time}
 
 Training time of a Bayesian \acp{cnn} is twice of a frequentist network with similar architecture when the number of samples is equal to one. In general, the training time of a Bayesian \acp{cnn}, $T$ is defined as:
 \begin{align}
-T = 2 * number of samples * t
+T = 2 * number\_of\_samples * t
 \end{align}
 where, $t$ is the training time of a frequentist network. 
 The factor of 2 is present due to the double learnable parameters in a Bayesian CNN network i.e. mean and variance for every single point estimate weight in the frequentist network.
