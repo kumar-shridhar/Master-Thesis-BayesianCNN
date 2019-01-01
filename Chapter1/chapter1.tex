@@ -15,7 +15,7 @@
 
 \newacro{cnn}[\textsc{Cnn}]{Convolutional neural network}
 
-Deep Neural Networks (DNNs), are connectionist systems that learn to perform tasks by learning on examples without having a prior knowledge about the tasks. 
+Deep Neural Networks (DNNs), are connectionist systems that learn to perform tasks by learning on examples without having prior knowledge about the tasks. 
 They easily scale to millions of data points and yet remain tractable to optimize with stochastic gradient descent.
 
 \acp{cnn}, a variant of DNNs, have already surpassed human accuracy in the realm of image classification (e.g. \cite{he2016deep,simonyan2014very,krizhevsky2012imagenet}). Due to the capacity of \acp{cnn} to fit on a wide diversity of non-linear data points, they require a large amount of training data. This often makes \acp{cnn} and Neural Networks in general, prone to overfitting on small datasets. The model tends to fit well to the training data, but are not predictive for new data. This often makes the Neural Networks incapable of correctly assessing the uncertainty in the training data and hence leads to overly confident decisions about the correct class, prediction or action.
@@ -44,12 +44,12 @@ But the variational approach used to approximate the posterior in Bayesian NNs c
 \includegraphics[height=.28\textheight]{Chapter1/Figs/weights.png}
 \includegraphics[height=.28\textheight]{Chapter1/Figs/distribution.png}
 \label{fig:Scalar_Bayesian_Distribution_Gluon}
-\caption{Top: Each filter weight has a fixed value, as in the case of frequentist Convolutional Networks. Bottom: Each filter weight has a distribution, as in case of Bayesian Convolutional Networks. \cite{Gluon}}
+\caption{Top: Each filter weight has a fixed value, as in the case of frequentist Convolutional Networks. Bottom: Each filter weight has a distribution, as in the case of Bayesian Convolutional Networks. \cite{Gluon}}
 \end{center}
 \end{figure}
 
 \section{Our Hypothesis}
-\newline We build our Bayesian \ac{cnn} upon \textit{Bayes by Backprop} \cite{graves2011practical,blundell2015weight}. The exact Bayesian inference on the weights of a neural network is intractable as the number of parameters is very large and the functional form of a neural network does not lend itself to exact integration. So, we approximate the intractable true posterior probability distributions $p(w|\mathcal{D})$ with variational probability distributions $q_{\theta}(w|\mathcal{D})$, which comprise the properties of Gaussian distributions $\mu \in \mathbb{R}^d$ and $\sigma \in \mathbb{R}^d$, denoted $\mathcal{N}(\theta|\mu, \sigma^2)$, where $d$ is the total number of parameters defining a probability distribution. The shape of these Gaussian variational posterior probability distributions, determined by their variance $\sigma^2$, expresses an uncertainty estimation of every model parameter. \\ \\
+\newline We build our Bayesian \ac{cnn} upon \textit{Bayes by Backprop} \cite{graves2011practical,blundell2015weight}. The exact Bayesian inference on the weights of a neural network is intractable as the number of parameters is very large and the functional form of a neural network does not lend itself to exact integration. So, we approximate the intractable true posterior probability distributions $p(w|\mathcal{D})$ with variational probability distributions $q_{\theta}(w|\mathcal{D})$, which comprise the properties of Gaussian distributions $\mu \in \mathbb{R}^d$ and $\sigma \in \mathbb{R}^d$, denoted by $\mathcal{N}(\theta|\mu, \sigma^2)$, where $d$ is the total number of parameters defining a probability distribution. The shape of these Gaussian variational posterior probability distributions, determined by their variance $\sigma^2$, expresses an uncertainty estimation of every model parameter. \\ \\
 
 
 
@@ -61,12 +61,14 @@ But the variational approach used to approximate the posterior in Bayesian NNs c
     \item We empirically show that our proposed generic and reliable variational inference method for Bayesian \acp{cnn} can be applied to various \ac{cnn} architectures without any limitations on their performances. 
     \item We examine how to estimate the aleatoric and epistemic uncertainties and empirically show how the uncertainty can decrease, allowing the decisions made by the network to become more deterministic as the training accuracy increases. 
     \item We also empirically show how our method typically only doubles the number of parameters yet trains an infinite ensemble using unbiased Monte Carlo estimates of the gradients. 
-    \item Finally, we apply L1 norm to the trained model parameters and prune the number of non zero values and further, fine-tune the model to reduce the number of model parameters without a reduction in the model prediction accuracy. 
+    \item We also apply L1 norm to the trained model parameters and prune the number of non zero values and further, fine-tune the model to reduce the number of model parameters without a reduction in the model prediction accuracy. 
+    \item Finally, we will apply the concept of Bayesian CNN to tasks like Image Super-Resolution and Generative Adversarial Networks and we will compare the results with other prominent architectures in the respective domain.
 \end{enumerate} 
 This work builds on the foundations laid out by Blundell et al. \cite{blundell2015weight}, who introduced \textit{Bayes by Backprop} for feedforward neural networks. Together with the extension to recurrent neural networks, introduced by Fortunato et al. \cite{fortunato2017bayesian}, \textit{Bayes by Backprop} is now applicable on the three most frequently used types of neural networks, i.e., feedforward, recurrent, and convolutional neural networks.
 
 
 \nomenclature[z-cnn]{$CNN$}{Convolution Neural Networks} 
+\nomenclature[z-nn]{$NN$}{Neural Networks} 
 \nomenclature[z-mnist]{$MNIST$}{Modified National Institute of Standards and Technology} 
 \nomenclature[z-cifar]{$CIFAR$}{Canadian Institute for Advanced Research} 
 \nomenclature[z-dnn]{$DNN$}{Deep Neural Networks} 

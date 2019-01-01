@@ -52,7 +52,7 @@
             \item Concepts overview of Variational Inference, and local reparameterization trick in Bayesian Neural Network.
             \item Backpropagation in Bayesian Networks using Bayes by Backprop.
             \item Estimation of Uncertainties in a network.
-            \item Pruning a network to reduce the number of overall parameters without affecting it's performance.
+            \item Pruning a network to reduce the number of overall parameters without affecting its performance.
         \end{itemize}
     }
 }
@@ -62,7 +62,7 @@
 \section{Neural Networks}
 \subsection{Brain Analogies}
 
-A perceptron is conceived as a mathematical model of how the neurons function in our brain by a famous psychologist Rosenblatt. According to Rosenblatt, a neuron  takes a set of binary inputs (nearby neurons), multiplies each input by a continuous-valued weight (the synapse strength to each nearby neuron), and thresholds the sum of these weighted inputs to output a 1 if the sum is big enough and otherwise a 0 (the same way neurons either fire or does not fire).
+A perceptron is conceived as a mathematical model of how the neurons function in our brain by a famous psychologist Rosenblatt. According to Rosenblatt, a neuron  takes a set of binary inputs (nearby neurons), multiplies each input by a continuous-valued weight (the synapse strength to each nearby neuron), and thresholds the sum of these weighted inputs to output a 1 if the sum is big enough and otherwise a 0 (the same way neurons either fire or do not fire).
 
 \begin{figure}[H]
 \begin{center}
@@ -94,7 +94,7 @@ Hubel and Wiesel in their hierarchy model mentioned a neural network to have a h
 Also, the network between the lower order hypercomplex cells and the higher order hypercomplex cells are structurally similar to the network between simple cells and the complex cells. In this hierarchy, a cell in a higher stage generally has a tendency to respond selectively to a more complicated feature of the stimulus pattern, and the cell at the lower stage responds to simpler features. Also, higher stage cells possess a larger receptive field and are more insensitive to the shift in the position of the stimulus pattern.
 
 Similar to a hierarchy model, a neural network starting layers learns simpler features like edges and corners and subsequent layers learn complex features like colours, textures and so on. Also, higher neural units possess a larger receptive field which builds over the initial layers. However, unlike in multilayer perceptron where all neurons from one layer are connected with all the neurons in the next layer, weight sharing is the main idea behind a convolutional neural network. 
-Example: instead of each neuron having a different weight for each pixel of the input image (28*28 weights), the neurons only have a small set of weights (5*5) that is applied to a whole bunch of small subsets of the image of the same size. Layers past the first layer work in a similar way by taking in the ‘local’ features found in the previously hidden layer rather than pixel images, and successively see a larger portions of the image since they are combining information about increasingly larger subsets of the image. Finally, the final layer makes the correct prediction for the output class.
+Example: instead of each neuron having a different weight for each pixel of the input image (28*28 weights), the neurons only have a small set of weights (5*5) that is applied to a whole bunch of small subsets of the image of the same size. Layers past the first layer work in a similar way by taking in the ‘local’ features found in the previously hidden layer rather than pixel images, and successively see larger portions of the image since they are combining information about increasingly larger subsets of the image. Finally, the final layer makes the correct prediction for the output class.
 
 The reason for why this is helpful is intuitive if not mathematically clear: without such constraints, the network would have to learn the same simple things (such as detecting edges, corners, etc) a whole bunch of times for each portion of the image. But with the constraint there, only one neuron would need to learn each simple feature - and with far fewer weights overall, it could do so much faster! Moreover, since the pixel-exact locations of such features do not matter the neuron could basically skip neighbouring subsets of the image - subsampling, now known as a type of pooling - when applying the weights, further reducing the training time. The addition of these two types of layers - convolutional and pooling layers - are the primary distinctions of Convolutional Neural Nets (CNNs/ConvNets) from plain old neural nets.
 
@@ -147,11 +147,11 @@ The movement of parameters out of the normal distribution does not change the be
 \section{Uncertainties in Bayesian Learning}
 
 
-Uncertainties in a network is a measure of how certain the model is with its prediction. In Bayesian modeling, there are two main types of uncertainty one can model \citep{Kiureghian}: \textit{Aleatoric} uncertainty and \textit{Epistemic} uncertainty. 
+Uncertainties in a network is a measure of how certain the model is with its prediction. In Bayesian modelling, there are two main types of uncertainty one can model \citep{Kiureghian}: \textit{Aleatoric} uncertainty and \textit{Epistemic} uncertainty. 
 
 \textit{Aleatoric} uncertainty measures the noise inherent in the observations. This type of uncertainty is present in the data collection method like the sensor noise or motion noise which is uniform along the dataset. This cannot be reduced if more data is collected. \textit{Epistemic} uncertainty, on the other hand, represents the uncertainty caused by the model. This uncertainty can be reduced given more data and is often referred to as \textit{model uncertainty}.  Aleatoric uncertainty can further be categorized into \textit{homoscedastic} uncertainty, uncertainty which stays constant for different inputs, and \textit{heteroscedastic} uncertainty. Heteroscedastic uncertainty depends on the inputs to the model, with some inputs potentially having more noisy outputs than others. Heteroscedastic uncertainty is in particular important so that model prevents from outputting very confident decisions.
 
-Current work measures uncertainties  by placing a probability distributions over either the model parameters or model outputs. Epistemic uncertainty is modelled by placing a prior distribution over a model's weights and then trying to capture how much these weights vary given some data. Aleatoric uncertainty, on the other hand, is modelled by placing a distribution over the output of the model.
+Current work measures uncertainties by placing a probability distributions over either the model parameters or model outputs. Epistemic uncertainty is modelled by placing a prior distribution over a model's weights and then trying to capture how much these weights vary given some data. Aleatoric uncertainty, on the other hand, is modelled by placing a distribution over the output of the model.
 
 \subsubsection{Sources of Uncertainities}
 
@@ -169,7 +169,7 @@ The following can be the source of uncertainty as mentioned by Kiureghian \cite{
 
 \section{Backpropagation}
 
-Backpropagation in a Neural Networks was proposed by Rumelhart \cite{Rumelhart} in 1986 and it is the most commonly used method for training neural networks. Backpropagation is a technique to compute the gradient of the loss in terms of the network weights. It operates in two phase: firstly, the input features through the network propagates in the forward direction to compute the function output and thereby the loss associated with the parameters. Secondly, the derivatives of the training loss with respect to the weights
+Backpropagation in a Neural Networks was proposed by Rumelhart \cite{Rumelhart} in 1986 and it is the most commonly used method for training neural networks. Backpropagation is a technique to compute the gradient of the loss in terms of the network weights. It operates in two phases: firstly, the input features through the network propagates in the forward direction to compute the function output and thereby the loss associated with the parameters. Secondly, the derivatives of the training loss with respect to the weights
 are propagated back from the output layer towards the input layers.
 These computed derivatives are further used to update the weights of the network. This is a continuous process and updating of the weight occurs continuously over every iteration. 
 
@@ -215,6 +215,6 @@ Model pruning possesses several advantages in terms of reduction in computationa
 efficient inference using these sparse models requires purpose-built hardware capable of loading sparse matrices and/or performing sparse matrix-vector operations. Thus the overall memory usage is reduced with the new pruned model. 
 
 
-There are several ways of achieving the pruned model, the most popular one is to map the low contributing weights to zero and reducing the number of overall non-zero valued weights. This can be achieved by training a large sparse model and pruning it further which makes it comparable to training a small dense model. Pruning away the less salient features to zero has been used in this thesis and is explained in details in chapter 4. 
+There are several ways of achieving the pruned model, the most popular one is to map the low contributing weights to zero and reducing the number of overall non-zero valued weights. This can be achieved by training a large sparse model and pruning it further which makes it comparable to training a small dense model. Pruning away the less salient features to zero has been used in this thesis and is explained in details in Chapter 4. 
 
 

@@ -31,7 +31,7 @@
 
 \subsection{Bayesian Training}
 Applying Bayesian methods to neural networks has been studied in the past with various approximation methods for the intractable true posterior probability distribution $p(w|\mathcal{D})$. Buntine and Weigend \cite{buntine1991bayesian} started to propose various \textit{maximum-a-posteriori} (MAP) schemes for neural networks. They were also the first who suggested second order derivatives in the prior probability distribution $p(w)$ to encourage smoothness of the resulting approximate posterior probability distribution.
-In subsequent work by Hinton and Van Camp \cite{hinton1993keeping}, the first variational methods were proposed which naturally served as a regularizer in neural networks. He also mentioned that the amount of information in a weight can be controlled by adding Gaussian noise. When optimizing the trade-off between the expected error and the information in the weights, the noise level can be adapted during learning.
+In subsequent work by Hinton and Van Camp \cite{hinton1993keeping}, the first variational methods were proposed which naturally served as a regularizer in neural networks. He also mentioned that the amount of information in weight can be controlled by adding Gaussian noise. When optimizing the trade-off between the expected error and the information in the weights, the noise level can be adapted during learning.
 
 
 Hochreiter and Schmidhuber \cite{hochreiter1995simplifying} suggested taking an information theory perspective into account and utilising a minimum description length (MDL) loss. This penalises non-robust weights by means of an approximate penalty based upon perturbations of the weights on the outputs.
@@ -52,7 +52,7 @@ Neural Networks can predict uncertainty when Bayesian methods are introduced in 
 
 \subsection{Model Pruning}
 
-Some early work in the model pruning domain used a second-order Taylor approximation of the increase in the loss function of the network when a weight is set to zero \cite{lecun1990optimal}. A diagonal Hessian approximation was used to calculate the saliency for each parameter \cite{lecun1990optimal} and the low-saliency parameters were pruned from the network and the network was retrained.
+Some early work in the model pruning domain used a second-order Taylor approximation of the increase in the loss function of the network when weight is set to zero \cite{lecun1990optimal}. A diagonal Hessian approximation was used to calculate the saliency for each parameter \cite{lecun1990optimal} and the low-saliency parameters were pruned from the network and the network was retrained.
 
 
 Narang \cite{DBLP:journals/corr/NarangDSE17} showed that a pruned RNN and GRU model performed better for the task of speech recognition compared to a dense network of the original size. This result is very similar to the results obtained in our case where a pruned model achieved better results than a normal network. However, no comparisons can be drawn as the model architecture (CNN vs RNN) used and the tasks (Computer Vision vs Speech Recognition) are completely different.  Narang \cite{DBLP:journals/corr/NarangDSE17} in his work introduced a gradual pruning scheme based on pruning all the weights in a layer
