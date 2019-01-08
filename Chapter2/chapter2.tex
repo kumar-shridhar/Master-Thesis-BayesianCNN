@@ -127,7 +127,7 @@ q(y^* | x^*) = \int p(y^* | f^*) p(f^* | x^*, w) q(w)  df^* dw.
 
 Minimising the Kullback--Leibler divergence is equivalent to maximising the \textit{log evidence lower bound},
 \begin{align}
-KL_{\text{VI}} := \int q(w) p(F | X, w) \log p(Y | F) dF dw - \KL(q(w) || p(w)) \label{eq:L:VI}
+KL_{\text{VI}} := \int q(w) p(F | X, w) \log p(Y | F) dF dw - KL(q(w) || p(w)) \label{eq:L:VI}
 \end{align}
 with respect to the variational parameters defining $q(w)$. This is known as \textit{variational inference}, a standard technique in Bayesian modelling.
 
