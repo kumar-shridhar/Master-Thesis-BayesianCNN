@@ -215,6 +215,11 @@ Model pruning possesses several advantages in terms of reduction in computationa
 efficient inference using these sparse models requires purpose-built hardware capable of loading sparse matrices and/or performing sparse matrix-vector operations. Thus the overall memory usage is reduced with the new pruned model. 
 
 
-There are several ways of achieving the pruned model, the most popular one is to map the low contributing weights to zero and reducing the number of overall non-zero valued weights. This can be achieved by training a large sparse model and pruning it further which makes it comparable to training a small dense model. Pruning away the less salient features to zero has been used in this thesis and is explained in details in Chapter 4. 
+There are several ways of achieving the pruned model, the most popular one is to map the low contributing weights to zero and reducing the number of overall non-zero valued weights. This can be achieved by training a large sparse model and pruning it further which makes it comparable to training a small dense model.
+
+Assigning weights zero to most features and non-zero weights to only important features can be formalized by applying the $L_0$ norm, where $L_0 = ||\theta||_0 = \sum{_j} \delta (\theta_j \neq 0)$, and it applies a constant penalty to all non-zero weights. 
+$L_0$ norm can be thought of a feature selector norm that only assigns non-zero values to feature that are important. However, the $L_0$ norm is non-convex and hence, non-differentiable that makes it a NP-hard problem and can be only efficiently solved when $P = NP$.
+The alternative that we use in our work is the $L_1$ norm, which is equal to the sum of the absolute weight values, $||\theta||_1 = \sum_j |\theta_j|$. $L_1$ norm is convex and hence differentiable and can be used as an approximation to $L_0$ norm  \cite{tibshirani1996regression}. $L_1$ norm works as a sparsity inducing regularizer by making large number of coefficients equal to zero, working as a great feature selector in our case. Only thing to keep in mind is that the $L_1$ norm do not have a gradient at $\theta_j = 0$ and we need to keep that in mind. 
+Pruning away the less salient features to zero has been used in this thesis and is explained in details in Chapter 4. 
 
 
