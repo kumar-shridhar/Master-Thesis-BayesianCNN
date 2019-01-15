@@ -123,6 +123,23 @@ The proposed work has been implemented in PyTorch and is available here : [Bayes
 ----------------------------------------------------------------------------------------------------------
 
 
+### Paper
+
+*  Journal paper of this work is also available on Arxiv: [
+A Comprehensive guide to Bayesian Convolutional Neural Network with Variational Inference](https://arxiv.org/abs/1901.02731)
+
+*   Feel free to cite, if the work is of any help to you:
+
+```
+@article{shridhar2019comprehensive,
+  title={A Comprehensive guide to Bayesian Convolutional Neural Network with Variational Inference},
+  author={Shridhar, Kumar and Laumann, Felix and Liwicki, Marcus},
+  journal={arXiv preprint arXiv:1901.02731},
+  year={2019}
+}
+```
+----------------------------------------------------------------------------------------------------------
+
 ## Thesis Template
 
 *   Cambridge Computer Laboratory PhD Thesis Template [https://github.com/cambridge/thesis](https://github.com/cambridge/thesis)
