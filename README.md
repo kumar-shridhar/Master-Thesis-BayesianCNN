@@ -9,7 +9,7 @@ Master Thesis: Bayesian Convolutional Neural Networks
 *   [Kumar Shridhar](https://kumar-shridhar.github.io/)
 
 ## Supervisors
-*   Prof. Marcus Liwicki (Professor at Luleå Unoversity, Sweden)
+*   Prof. Marcus Liwicki (Professor at Luleå University, Sweden)
 *   Felix Laumann (PhD candidate at Imperial College, London)
 
 
